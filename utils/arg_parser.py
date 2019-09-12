@@ -1,6 +1,6 @@
 from argparse import ArgumentParser
 import configparser
-from init_log import init_log
+from utils.init_log import init_log
 
 
 def parse_argument():
