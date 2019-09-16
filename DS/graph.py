@@ -39,7 +39,7 @@ class Graph:
 
 
 def check_condition(graph: Graph, edge: Edge):
-    if edge.dst_vertex not in graph.generate_vertices:
+    if edge.dst_vertex not in graph.generate_vertices or edge.dst_vertex not in graph.graph.values():
         return True
     else:
         return False
