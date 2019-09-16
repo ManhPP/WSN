@@ -35,13 +35,14 @@ class Constructor:
                 edge = Edge(self._list_vertex[j], vertex)
                 if check_condition(graph, edge):
                     graph.add_edge(edge)
-                    print(self._list_vertex[j].name, ' ==> ', vertex.name)
+                    print(edge)
+                    print(self._list_vertex[j].name + 1, ' ==> ', vertex.name + 1)
                     break
         return graph
 
 
 if __name__ == '__main__':
-    gen = [0.55, 0.75, 0.35, 0.65, 0.45, 0.99, 0.9, 0.3, 0.4, 0.6, 0.5, 0.1, 0.77, 0.22, 0.57, 0.45, 0.66, 0.14]
+    gen = [0.55, 0.75, 0.35, 0.65, 0.45, 0.99, 0.9, 0.3, 0.4, 0.6, 0.5, 0.7, 0.77, 0.22, 0.57, 0.45, 0.66, 0.14]
     vertices = [None for _ in range(6)]
     for i in range(6):
         vertices[i] = Vertex(i)
@@ -52,3 +53,4 @@ if __name__ == '__main__':
     vertices[4].adjacent_vertices = [vertices[1], vertices[3], vertices[3]]
     constructor = Constructor(3, 2, 2, vertices)
     a = constructor.gen_graph(gen)
+    print(a)

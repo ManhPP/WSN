@@ -21,5 +21,5 @@ class Vertex(Position):
     def __hash__(self):
         return hash(str(self.name))
 
-    def __str__(self):
-        return "name: " + self.name + str(self.adjacent_vertices)
+    def __repr__(self):
+        return str(self.name + 1)

@@ -16,13 +16,15 @@ def parse_argument():
 
 def parse_config():
     parser = configparser.ConfigParser()
-    parser.read("config.ini")
+    parser.read("/home/manhpp/Documents/Code/WSN/utils/config.ini")
     dict_constant = dict()
     dict_constant["epsilon_fs"] = parser.getfloat("CONSTANT", "epsilon_fs")
     dict_constant["epsilon_mp"] = parser.getfloat("CONSTANT", "epsilon_mp")
     dict_constant["E_DA"] = parser.getfloat("CONSTANT", "E_DA")
     dict_constant["E_RX"] = parser.getfloat("CONSTANT", "E_RX")
     dict_constant["E_TX"] = parser.getfloat("CONSTANT", "E_TX")
+    dict_constant["l"] = parser.getint("CONSTANT", "l")
+
     return dict_constant
 
 

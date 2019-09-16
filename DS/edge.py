@@ -19,3 +19,6 @@ class Edge:
     @property
     def distance(self):
         return self._distance
+
+    def __repr__(self):
+        return str(self.src_vertex) + " -> " + str(self.dst_vertex)
