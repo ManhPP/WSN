@@ -1,4 +1,5 @@
 from DS.graph import Graph
+from DS.vertex import Vertex
 from utils.arg_parser import parse_config
 
 
@@ -31,6 +32,21 @@ def get_fitness(g: Graph):
                 break
 
     return params['l'] * result
+
+
+def get_hop(g: Graph, vertex: Vertex):
+    if vertex not in g.vertices:
+        raise Exception("Error vertices not in graph: ", vertex)
+    graph = g.graph
+
+    def cal(v):
+        if v == g.vertices[0]:
+            return 0
+        else:
+            for i in g.vertices:
+                if v in graph[i]:
+                    return 1 + cal(i)
+    return cal(vertex)
 
 
 if __name__ == '__main__':
