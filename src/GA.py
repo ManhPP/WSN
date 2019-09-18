@@ -1,11 +1,17 @@
 import random
 
-from deap import base, creator, tools
+from deap import base, creator, tools, algorithms
 import numpy as np
 from src.fitness import get_fitness
+
 creator.create("FitnessMin", base.Fitness, weights=(-1.,))
 FitnessMin = creator.FitnessMin
 creator.create("Individual", list, fitness=FitnessMin)
+
+N_GENS = 200
+CXPB = 0.8
+MUTPD = 0.05
+TERMINATE = 30
 
 
 def init_individual(num_sensors, num_pos):
@@ -29,7 +35,37 @@ def run_ga(num_sensors, num_pos):
 
     toolbox.register("individual", init_individual(), num_sensors, num_pos)
     toolbox.register("population", tools.initRepeat(), list, toolbox.individual)
-    toolbox.register("mate", tools.cxTwoPoint())
-    toolbox.register("mutate", tools.mutShuffleIndexes(), indpb=0.2)
+    toolbox.register("mate", tools.cxUniform(), indpb=0.2)
+    toolbox.register("mutate", tools.mutGaussian(), mu=0, sigma=0.2, indpb=0.2)
     toolbox.register("select", tools.selTournament, tournsize=3)
     toolbox.register("evaluate", get_fitness())
+
+    pop = toolbox.population(N_GENS)
+    best_ind = toolbox.clone(pop[0])
+
+    prev = -1  # use for termination
+    count_term = 0  # use for termination
+
+    for g in range(N_GENS):
+        offsprings = map(toolbox.clone, toolbox.select(pop, len(pop)))
+        offsprings = algorithms.varAnd(offsprings, toolbox, CXPB, MUTPD)
+
+        invalid_ind = [ind for ind in offsprings if not ind.fitness.valid]
+        fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
+        min_value = float('inf')
+
+        for ind, fit in zip(invalid_ind, fitnesses):
+            ind.fitness.values = fit
+
+        b = round(min_value, 6)
+        if prev == b:
+            count_term += 1
+        else:
+            count_term = 0
+        print("max value this pop %d : %f " % (g, min_value))
+        pop[:] = offsprings
+        prev = b
+        if count_term == TERMINATE:
+            break
+
+    return best_ind

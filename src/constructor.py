@@ -3,6 +3,7 @@ from DS.graph import Graph, check_condition
 from DS.vertex import Vertex
 from src.fitness import get_fitness, get_hop
 
+
 class Constructor:
     def __init__(self, num_sensors, num_relays, num_positions, list_vertices: Vertex = None):
         if list_vertices is None:
@@ -25,12 +26,15 @@ class Constructor:
         position_relay = list(
             dict(sorted({i: genes[i] for i in range(1, self.num_positions + 1)}.items(), key=lambda x: x[1])).keys())[
                          :self.num_relays]
+        for i in position_relay:
+            edge = Edge(self._list_vertex[0], self._list_vertex[i])
+            graph.add_edge(edge)
+
         ignored_position = [i for i in range(1, self.num_positions + 1) if i not in position_relay]
 
-        order = list(dict(sorted(dict_genes_order.items(), key=lambda x: x[1])).keys())
-        for i in ignored_position:
-            order.remove(i)
-        for i in range(len(order) - 1):
+        order = list(dict(sorted(list(dict_genes_order.items())[self.num_positions+1:], key=lambda x: x[1])).keys())
+
+        for i in range(len(order)):
             dict_order_adjacent = dict()
             index_vertex = order[i]
             vertex = self._list_vertex[index_vertex]
