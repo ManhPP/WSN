@@ -38,7 +38,7 @@ class Constructor:
             dict_order_adjacent = dict()
             index_vertex = order[i]
             vertex = self._list_vertex[index_vertex]
-            print(vertex)
+            # print(vertex)
             for j in vertex.adjacent_vertices:
                 if j.name not in ignored_position:
                     dict_order_adjacent[j.name] = dict_genes_value[j.name]
@@ -49,7 +49,7 @@ class Constructor:
                 if check_condition(graph, edge):
                     graph.add_edge(edge)
                     # print(edge)
-                    print(self._list_vertex[j], ' ==> ', vertex)
+                    # print(self._list_vertex[j], ' ==> ', vertex)
                     break
         return graph
 
@@ -63,7 +63,7 @@ if __name__ == '__main__':
     gen = [0.55, 0.75, 0.35, 0.65, 0.45, 0.99, 0.5, 0.4, 0.9, 0.3, 0.4, 0.6, 0.5, 0.7, 0.2, 0.75, 0.22, 0.57, 0.45, 0.66, 0.14, 0.5, 0.2, 0.6]
     vertices = [None for _ in range(8)]
     for i in range(8):
-        vertices[i] = Vertex(i)
+        vertices[i] = Vertex(name=i)
 
     vertices[0].adjacent_vertices = [vertices[1], vertices[3], vertices[5]]
     vertices[1].adjacent_vertices = [vertices[0], vertices[2], vertices[4], vertices[5]]
@@ -77,4 +77,4 @@ if __name__ == '__main__':
     constructor = Constructor(3, 2, 4, vertices)
     a = constructor.gen_graph(gen)
     print(a)
-    print(get_hop(a, vertices[2]))
+    print(get_hop(a, vertices[0]))

@@ -3,6 +3,8 @@ import random
 from deap import base, creator, tools, algorithms
 import numpy as np
 from src.fitness import get_fitness
+from utils.load_input import WsnInput
+from src.constructor import Constructor
 
 creator.create("FitnessMin", base.Fitness, weights=(-1.,))
 FitnessMin = creator.FitnessMin
@@ -30,15 +32,16 @@ def get_sub_list(src_list, n):
     return dst_list
 
 
-def run_ga(num_sensors, num_pos):
+def run_ga(inp: WsnInput):
+    constructor = Constructor(inp.num_of_sensors, inp.num_of_relays, inp.num_of_relay_positions, inp.all_vertex)
     toolbox = base.Toolbox()
 
-    toolbox.register("individual", init_individual(), num_sensors, num_pos)
-    toolbox.register("population", tools.initRepeat(), list, toolbox.individual)
-    toolbox.register("mate", tools.cxUniform(), indpb=0.2)
-    toolbox.register("mutate", tools.mutGaussian(), mu=0, sigma=0.2, indpb=0.2)
+    toolbox.register("individual", init_individual, inp.num_of_sensors, inp.num_of_relay_positions)
+    toolbox.register("population", tools.initRepeat, list, toolbox.individual)
+    toolbox.register("mate", tools.cxUniform, indpb=0.2)
+    toolbox.register("mutate", tools.mutGaussian, mu=0, sigma=0.2, indpb=0.2)
     toolbox.register("select", tools.selTournament, tournsize=3)
-    toolbox.register("evaluate", get_fitness())
+    toolbox.register("evaluate", get_fitness, max_hop=inp.max_hop, constructor=constructor)
 
     pop = toolbox.population(N_GENS)
     best_ind = toolbox.clone(pop[0])
@@ -69,3 +72,8 @@ def run_ga(num_sensors, num_pos):
             break
 
     return best_ind
+
+
+if __name__ == '__main__':
+    inp = WsnInput.from_file('/home/manhpp/Documents/Code/WSN/data/ga-dem1_r25_1.in')
+    run_ga(inp)

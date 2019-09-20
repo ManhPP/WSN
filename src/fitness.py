@@ -1,12 +1,17 @@
 from DS.graph import Graph
 from DS.vertex import Vertex
 from utils.arg_parser import parse_config
+import itertools
 
 
-def get_fitness(g: Graph, max_hop: int):
+def get_fitness(genes: list, max_hop: int = 20, constructor=None):
+    if constructor is None:
+        raise Exception("Error: Must init constructor!")
+    g = constructor.gen_graph(genes)
     graph = g.graph
     vertices = g.vertices
-    adjacent = list(set(graph.values))
+    all_values = itertools.chain.from_iterable(graph.values())
+    adjacent = list(set(all_values))
     list_send = []
     list_send_receive = []
 
@@ -50,6 +55,7 @@ def get_hop(g: Graph, vertex: Vertex):
             for i in g.vertices:
                 if v in graph[i]:
                     return 1 + cal(i)
+    tmp = cal(vertex)
     return cal(vertex)
 
 
