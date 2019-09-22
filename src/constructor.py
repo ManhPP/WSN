@@ -77,4 +77,5 @@ if __name__ == '__main__':
     constructor = Constructor(3, 2, 4, vertices)
     a = constructor.gen_graph(gen)
     print(a)
-    print(get_hop(a, vertices[0]))
+    print(get_hop(a, vertices[5]))
+    print(vertices[5].hop)

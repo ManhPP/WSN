@@ -23,7 +23,7 @@ class Graph:
             self.graph[edge.src_vertex].append(edge.dst_vertex)
         else:
             self.graph[edge.src_vertex] = [edge.dst_vertex]
-
+        edge.dst_vertex.hop = 1 + int(edge.src_vertex.hop)
         if edge.dst_vertex not in self.graph.keys():
             self.graph[edge.dst_vertex] = []
 

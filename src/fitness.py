@@ -1,3 +1,5 @@
+import sys
+
 from DS.graph import Graph
 from DS.vertex import Vertex
 from utils.arg_parser import parse_config
@@ -38,7 +40,9 @@ def get_fitness(genes: list, max_hop: int = 20, constructor=None):
     result *= params['l']
 
     for i in vertices:
-        result += float('inf') * max(get_hop(g, i) - max_hop, 0)
+        if i.hop > max_hop:
+            return float('inf')
+        # result += 9999 * max(i.hop - max_hop, 0)
 
     return result
 
@@ -49,13 +53,13 @@ def get_hop(g: Graph, vertex: Vertex):
     graph = g.graph
 
     def cal(v):
+        sys.setrecursionlimit(1500)
         if v == g.vertices[0]:
             return 0
         else:
             for i in g.vertices:
                 if v in graph[i]:
                     return 1 + cal(i)
-    tmp = cal(vertex)
     return cal(vertex)
 
 

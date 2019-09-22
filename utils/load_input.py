@@ -1,6 +1,7 @@
 import json
 from DS.position import distance
 from DS.vertex import Vertex
+from utils.init_log import init_log
 
 
 class WsnInput:
