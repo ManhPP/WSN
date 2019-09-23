@@ -72,6 +72,10 @@ class WsnInput:
             'radius': self.radius
         }
 
+    def reset_all_hop(self):
+        for v in self.all_vertex:
+            v.reset_hop()
+
     def to_file(self, file_path):
         d = self.to_dict()
         with open(file_path, "wt") as f:

@@ -1,5 +1,5 @@
 {
-    "H": 1000,
+    "H": 30,
     "num_of_relay_positions": 40,
     "num_of_relays": 20,
     "num_of_sensors": 40,

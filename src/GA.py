@@ -5,6 +5,8 @@ import numpy as np
 from src.fitness import get_fitness
 from utils.load_input import WsnInput
 from src.constructor import Constructor
+from DS.vertex import Vertex
+from utils.init_log import init_log
 
 creator.create("FitnessMin", base.Fitness, weights=(-1.,))
 FitnessMin = creator.FitnessMin
@@ -23,7 +25,15 @@ def init_individual(num_sensors, num_pos):
     return creator.Individual(individual)
 
 
-def run_ga(inp: WsnInput):
+def reset_hop(v: Vertex):
+    v.reset_hop()
+
+
+def run_ga(inp: WsnInput, logger=None):
+    if logger is None:
+        raise Exception("Error: logger is None!")
+
+    logger.info("Start!")
     constructor = Constructor(inp.num_of_sensors, inp.num_of_relays, inp.num_of_relay_positions, inp.all_vertex)
     toolbox = base.Toolbox()
 
@@ -37,46 +47,53 @@ def run_ga(inp: WsnInput):
 
     pop = toolbox.population(POP_SIZE)
     best_ind = toolbox.clone(pop[0])
-    print("init fitness: ", toolbox.evaluate(best_ind))
+    logger.info("init best individual: %s, fitness: %s" % (best_ind, toolbox.evaluate(best_ind)))
     prev = -1  # use for termination
     count_term = 0  # use for termination
 
     for g in range(N_GENS):
-        offsprings = map(toolbox.clone, toolbox.select(pop, len(pop)))
+        offsprings = map(toolbox.clone, toolbox.select(pop, len(pop) - 1))
         offsprings = algorithms.varAnd(offsprings, toolbox, CXPB, MUTPB)
         min_value = float('inf')
         invalid_ind = []
-        tmp = [ind for ind in offsprings if not ind.fitness.valid]
+        # tmp = [ind for ind in offsprings if not ind.fitness.valid]
+        tmp = [ind for ind in offsprings]
+        tmp.append(best_ind)
         fitnesses = toolbox.map(toolbox.evaluate, tmp)
-        # fit = list(fitnesses)
-        for ind, fit in zip(tmp, fitnesses):
+        fit1 = list(fitnesses)
+        for ind, fit in zip(tmp, fit1):
             if fit == float('inf'):
                 invalid_ind.append(best_ind)
             else:
                 invalid_ind.append(ind)
-        fitnesses_main = toolbox.map(toolbox.evaluate, invalid_ind)
-        # fit = list(fitnesses_main)
-        for ind, fit in zip(invalid_ind, fitnesses_main):
+        fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
+        fit2 = list(fitnesses)
+        for ind, fit in zip(invalid_ind, fit2):
 
             ind.fitness.values = [fit]
             if min_value > fit:
                 min_value = fit
                 best_ind = toolbox.clone(ind)
-        print(best_ind)
         b = round(min_value, 6)
         if prev == b:
             count_term += 1
         else:
             count_term = 0
-        print("min value this pop %d : %f " % (g, min_value))
+        logger.info("Min value this pop %d : %f " % (g, min_value))
         pop[:] = invalid_ind[:]
         prev = b
         if count_term == TERMINATE:
             break
 
+    logger.info("Finished! Best individual: %s, fitness: %s" % (best_ind, min_value))
     return best_ind
 
 
 if __name__ == '__main__':
-    inp = WsnInput.from_file('/home/manhpp/Documents/Code/WSN/data/ga-dem1_r25_1.in')
-    run_ga(inp)
+    logger = init_log()
+    path = '/home/manhpp/Documents/Code/WSN/data/ga-dem1_r25_1.in'
+    logger.info("prepare input data from path %s" % path)
+    inp = WsnInput.from_file(path)
+    logger.info("info input: %s" % inp.to_dict())
+    logger.info("run GA....")
+    run_ga(inp, logger)

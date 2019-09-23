@@ -2,7 +2,7 @@ from DS.edge import Edge
 from DS.graph import Graph, check_condition
 from DS.vertex import Vertex
 from src.fitness import get_fitness, get_hop
-
+from copy import deepcopy
 
 class Constructor:
     def __init__(self, num_sensors, num_relays, num_positions, list_vertices: Vertex = None):
@@ -15,6 +15,7 @@ class Constructor:
         self.num_positions = num_positions
 
     def gen_graph(self, genes: list):
+        list_vertices = deepcopy(self._list_vertex)
         if len(genes) != 3 * (self.num_positions + self.num_sensors + 1):
             raise Exception("Error Gen's length is not divisible by 3")
         graph = Graph()
@@ -27,7 +28,7 @@ class Constructor:
             dict(sorted({i: genes[i] for i in range(1, self.num_positions + 1)}.items(), key=lambda x: x[1])).keys())[
                          :self.num_relays]
         for i in position_relay:
-            edge = Edge(self._list_vertex[0], self._list_vertex[i])
+            edge = Edge(list_vertices[0], list_vertices[i])
             graph.add_edge(edge)
 
         ignored_position = [i for i in range(1, self.num_positions + 1) if i not in position_relay]
@@ -37,7 +38,7 @@ class Constructor:
         for i in range(len(order)):
             dict_order_adjacent = dict()
             index_vertex = order[i]
-            vertex = self._list_vertex[index_vertex]
+            vertex = list_vertices[index_vertex]
             # print(vertex)
             for j in vertex.adjacent_vertices:
                 if j.name not in ignored_position:
@@ -45,7 +46,7 @@ class Constructor:
             order_adjacent = list(dict(sorted(dict_order_adjacent.items(), key=lambda x: x[1])).keys())
 
             for j in order_adjacent:
-                edge = Edge(self._list_vertex[j], vertex)
+                edge = Edge(list_vertices[j], vertex)
                 if check_condition(graph, edge):
                     graph.add_edge(edge)
                     # print(edge)

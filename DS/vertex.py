@@ -20,6 +20,9 @@ class Vertex(Position):
     def add_adjacent_vertex(self, vertex):
         self.adjacent_vertices.append(vertex)
 
+    def reset_hop(self):
+        self.hop = 0
+
     def to_dict(self):
         return {
             'name': self.name,

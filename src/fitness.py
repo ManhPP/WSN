@@ -41,6 +41,7 @@ def get_fitness(genes: list, max_hop: int = 20, constructor=None):
 
     for i in vertices:
         if i.hop > max_hop:
+            print(i.hop)
             return float('inf')
         # result += 9999 * max(i.hop - max_hop, 0)
 
