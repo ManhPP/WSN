@@ -36,6 +36,7 @@ def run_ga(inp: WsnInput, logger=None):
     logger.info("Start!")
     constructor = Constructor(inp.num_of_sensors, inp.num_of_relays, inp.num_of_relay_positions, inp.all_vertex)
     toolbox = base.Toolbox()
+    stats = tools.Statistics(key=lambda ind: ind.fitness.values)
 
     toolbox.register("individual", init_individual, inp.num_of_sensors, inp.num_of_relay_positions)
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
@@ -60,15 +61,15 @@ def run_ga(inp: WsnInput, logger=None):
         tmp = [ind for ind in offsprings]
         tmp.append(best_ind)
         fitnesses = toolbox.map(toolbox.evaluate, tmp)
-        fit1 = list(fitnesses)
-        for ind, fit in zip(tmp, fit1):
+        # fit1 = list(fitnesses)
+        for ind, fit in zip(tmp, fitnesses):
             if fit == float('inf'):
                 invalid_ind.append(best_ind)
             else:
                 invalid_ind.append(ind)
         fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
-        fit2 = list(fitnesses)
-        for ind, fit in zip(invalid_ind, fit2):
+        # fit2 = list(fitnesses)
+        for ind, fit in zip(invalid_ind, fitnesses):
 
             ind.fitness.values = [fit]
             if min_value > fit:
@@ -94,6 +95,10 @@ if __name__ == '__main__':
     path = '/home/manhpp/Documents/Code/WSN/data/ga-dem1_r25_1.in'
     logger.info("prepare input data from path %s" % path)
     inp = WsnInput.from_file(path)
+    logger.info("num generation: %s" % N_GENS)
+    logger.info("population size: %s" % POP_SIZE)
+    logger.info("crossover probability: %s" % CXPB)
+    logger.info("mutation probability: %s" % MUTPB)
     logger.info("info input: %s" % inp.to_dict())
     logger.info("run GA....")
     run_ga(inp, logger)

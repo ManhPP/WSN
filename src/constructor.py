@@ -4,6 +4,7 @@ from DS.vertex import Vertex
 from src.fitness import get_fitness, get_hop
 from copy import deepcopy
 
+
 class Constructor:
     def __init__(self, num_sensors, num_relays, num_positions, list_vertices: Vertex = None):
         if list_vertices is None:
