@@ -24,6 +24,7 @@ class Graph:
         else:
             self.graph[edge.src_vertex] = [edge.dst_vertex]
         edge.dst_vertex.hop = 1 + int(edge.src_vertex.hop)
+        edge.src_vertex.num_child += 1
         if edge.dst_vertex not in self.graph.keys():
             self.graph[edge.dst_vertex] = []
 

@@ -2,10 +2,11 @@ from DS.position import Position
 
 
 class Vertex(Position):
-    def __init__(self, pos: Position = Position(), type_of_vertex="normal", name=-1, hop: int = 0):
+    def __init__(self, pos: Position = Position(), type_of_vertex="normal", name=-1, hop: int = 0, num_child=0):
         super().__init__(pos.x, pos.y, pos.z)
         self.name = name
         self.hop = hop
+        self.num_child = num_child
         self.type_of_vertex = type_of_vertex
         self.adjacent_vertices = []
 
@@ -28,14 +29,15 @@ class Vertex(Position):
             'name': self.name,
             "type": self.type_of_vertex,
             'hop': self.hop,
+            'num_child': self.num_child,
             'x': self.x,
             'y': self.y,
             'z': self.z
         }
 
     @classmethod
-    def from_dict(cls, d, type_of_vertex="normal", name=-1, hop=0):
-        return cls(Position.from_dict(d), type_of_vertex, name, hop)
+    def from_dict(cls, d, type_of_vertex="normal", name=-1, hop=0, num_child=0):
+        return cls(Position.from_dict(d), type_of_vertex, name, hop, num_child)
 
     def __hash__(self):
         return hash(str(self.name))

@@ -35,7 +35,7 @@ def get_fitness(genes: list, max_hop: int = 20, constructor=None):
     for i in list_send_receive:
         for j in g.vertices:
             if i in graph[j]:
-                result += params['E_RX'] + params['E_DA'] + params['epsilon_mp'] * i.get_distance(j)**4
+                result += i.num_child * (params['E_RX'] + params['E_DA']) + params['epsilon_mp'] * i.get_distance(j)**4
                 break
     result *= params['l']
 
