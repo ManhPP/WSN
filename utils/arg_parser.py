@@ -29,9 +29,10 @@ def parse_config():
 
 
 if __name__ == '__main__':
-    parse_config()
-    logger = init_log()
-    logger.info("arg_parser")
-    logger.warning("this is test")
+    # parse_config()
+    # logger = init_log()
+    # logger.info("arg_parser")
+    # logger.warning("this is test")
     dict_const = parse_config()
-    logger.info(dict_const)
+    print(dict_const)
+    # logger.info(dict_const)

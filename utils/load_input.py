@@ -49,7 +49,7 @@ class WsnInput:
         all_vertex.extend(sensors)
         for i in all_vertex:
             for j in all_vertex:
-                if distance(i, j) <= radius:
+                if distance(i, j) <= radius and distance(i, j) != 0:
                     i.add_adjacent_vertex(j)
                     j.add_adjacent_vertex(i)
 
@@ -75,6 +75,10 @@ class WsnInput:
     def reset_all_hop(self):
         for v in self.all_vertex:
             v.reset_hop()
+
+    def reset_all_child(self):
+        for v in self.all_vertex:
+            v.reset_child()
 
     def to_file(self, file_path):
         d = self.to_dict()

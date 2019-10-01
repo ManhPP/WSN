@@ -24,6 +24,9 @@ class Vertex(Position):
     def reset_hop(self):
         self.hop = 0
 
+    def reset_child(self):
+        self.num_child = 0
+
     def to_dict(self):
         return {
             'name': self.name,
