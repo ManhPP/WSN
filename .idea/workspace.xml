@@ -2,14 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2bf88837-6ccf-436e-a608-17ac727b7cc5" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/mip/MIP.ipynb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mip/mip.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mip/prepare_data.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DS/vertex.py" beforeDir="false" afterPath="$PROJECT_DIR$/DS/vertex.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/MIP.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/arg_parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/arg_parser.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/load_input.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/load_input.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mip/mip.py" beforeDir="false" afterPath="$PROJECT_DIR$/mip/mip.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -122,7 +116,8 @@
       <workItem from="1569641303541" duration="2366000" />
       <workItem from="1569683124948" duration="585000" />
       <workItem from="1569684017902" duration="9891000" />
-      <workItem from="1569902330589" duration="1635000" />
+      <workItem from="1569902330589" duration="2246000" />
+      <workItem from="1569939962129" duration="4012000" />
     </task>
     <servers />
   </component>
