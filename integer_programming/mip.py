@@ -1,6 +1,6 @@
 from ortools.linear_solver import pywraplp
 from utils.arg_parser import parse_config
-from prepare_data import prepare
+from integer_programming.prepare_data import prepare
 
 
 def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):

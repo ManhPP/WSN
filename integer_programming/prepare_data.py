@@ -1,5 +1,4 @@
 from utils.load_input import WsnInput
-from copy import deepcopy
 from DS.position import distance
 
 
