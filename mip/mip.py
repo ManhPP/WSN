@@ -3,7 +3,7 @@ from utils.arg_parser import parse_config
 from prepare_data import prepare
 
 
-def solve(inp, is_adj_matrix, distance_matrix, dict_constant):
+def solve_ortools(inp, is_adj_matrix, distance_matrix, dict_constant):
     solver = pywraplp.Solver('wsn',
                              pywraplp.Solver.CBC_MIXED_INTEGER_PROGRAMMING)
 
@@ -37,11 +37,12 @@ def solve(inp, is_adj_matrix, distance_matrix, dict_constant):
         for j in range(1, num_all_vertex):
             if is_adj_matrix[i][j] == 1:
                 available_edges.append((i, j))
-                for q in range(inp.max_hop + 1):
-                    for k in(1, num_all_vertex):
+                for q in range(1, inp.max_hop + 1):
+                    for k in range(1, num_all_vertex):
                         z[i, j, q, k] = solver.BoolVar('z[%i,%i,%i,%i]' % (i, j, q, k))
+
     for k in range(1, num_all_vertex):
-        for q in range(inp.max_hop + 1):
+        for q in range(1, inp.max_hop + 1):
             z[k, k, q, k] = solver.BoolVar('z[%i,%i,%i,%i]' % (k, k, q, k))
 
     for i in range(num_all_vertex):
@@ -55,7 +56,7 @@ def solve(inp, is_adj_matrix, distance_matrix, dict_constant):
         tmp = []
         for i in range(num_all_vertex):
             if is_adj_matrix[i][j] == 1:
-                tmp.append(j)
+                tmp.append(i)
         i_matrix[j] = tmp
 
     # Objective
@@ -80,11 +81,11 @@ def solve(inp, is_adj_matrix, distance_matrix, dict_constant):
 
     for i in range(num_all_vertex):
         solver.Add(inp.num_of_sensors * b[i] >= solver.Sum(connect_matrix[i, j] for j in range(num_all_vertex)))
-        solver.Add(b[i] <= solver.Add(connect_matrix[i, j] for j in range(num_all_vertex)))
+        solver.Add(b[i] <= solver.Sum(connect_matrix[i, j] for j in range(num_all_vertex)))
 
     for i in range(inp.num_of_relay_positions + 1, num_all_vertex):
         solver.Add(inp.num_of_sensors * (1 - a[i]) >= solver.Sum(connect_matrix[i, j] for j in range(num_all_vertex)))
-        solver.Add(1 - a[i] <= solver.Add(connect_matrix[i, j] for j in range(num_all_vertex)))
+        solver.Add(1 - a[i] <= solver.Sum(connect_matrix[i, j] for j in range(num_all_vertex)))
 
     for i in range(num_all_vertex):
         solver.Add(2 * e[i] >= a[i] + b[i])
@@ -122,28 +123,30 @@ def solve(inp, is_adj_matrix, distance_matrix, dict_constant):
     # hop constrained
     for i in j_matrix[0]:
         for k in range(1, num_all_vertex):
-            solver.Add(z[0, i, 1, k] - solver.Sum(z[i, j, 2, k] for j in j_matrix[i]))
+            solver.Add(z[0, i, 1, k] - solver.Sum(z[i, j, 2, k] for j in j_matrix[i]) == 0)
 
     for i, j in available_edges:
         for k in range(1, num_all_vertex):
-            solver.Add(solver.Sum(z[i, j, q, k] for q in range(1, inp.max_hop)) <= connect_matrix[i, j])
+            solver.Add(solver.Sum(z[i, j, q, k] for q in range(1, inp.max_hop + 1)) <= connect_matrix[i, j])
 
     for k in range(1, num_all_vertex):
         solver.Add(solver.Sum(z[j, k, inp.max_hop, k] for j in i_matrix[k]) + z[k, k, inp.max_hop, k] == 1)
 
     for k in range(1, num_all_vertex):
-        for q in range(2, inp.max_hop-1):
-            solver.Add(
-                solver.Sum(z[j, i, q, k] for j in i_matrix[i]) - solver.Sum(z[i, j, q+1, k] for j in j_matrix[i]) == 0)
+        for q in range(2, inp.max_hop):
+            for i in range(1, num_all_vertex):
+                solver.Add(
+                    solver.Sum(z[j, i, q, k] for j in i_matrix[i]) -
+                    solver.Sum(z[i, j, q+1, k] for j in j_matrix[i]) == 0)
 
     print('Number of constraints =', solver.NumConstraints())
-    solver.Solve()
-    print('optimal value = ', solver.Objective().Value())
-    print()
+    result_status = solver.Solve()
+    assert result_status == pywraplp.Solver.OPTIMAL
     for i in range(num_all_vertex):
         for j in range(num_all_vertex):
             print(connect_matrix[i, j])
-
+    print()
+    print('optimal value = ', solver.Objective().Value())
     print()
     print("Time = ", solver.WallTime(), " milliseconds")
 
@@ -151,4 +154,4 @@ def solve(inp, is_adj_matrix, distance_matrix, dict_constant):
 if __name__ == '__main__':
     _inp, _is_adj_matrix, _distance_matrix = prepare('/home/manhpp/Documents/Code/WSN/data/ga-dem1_r25_1.in')
     _dict_constant = parse_config()
-    solve(_inp, _is_adj_matrix, _distance_matrix, _dict_constant)
+    solve_ortools(_inp, _is_adj_matrix, _distance_matrix, _dict_constant)

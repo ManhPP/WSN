@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2bf88837-6ccf-436e-a608-17ac727b7cc5" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/mip/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mip/mip.py" beforeDir="false" afterPath="$PROJECT_DIR$/mip/mip.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mip/prepare_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/mip/prepare_data.py" afterDir="false" />
@@ -144,7 +143,7 @@
       <workItem from="1569902330589" duration="2246000" />
       <workItem from="1569939962129" duration="5870000" />
       <workItem from="1570115663268" duration="2264000" />
-      <workItem from="1570200250564" duration="6958000" />
+      <workItem from="1570200250564" duration="15621000" />
     </task>
     <servers />
   </component>
@@ -169,20 +168,25 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/mip/prepare_data.py</url>
-          <line>26</line>
+          <line>29</line>
           <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/mip/mip.py</url>
+          <line>150</line>
+          <option name="timeStamp" value="9" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/WSN$prepare_data.coverage" NAME="prepare_data Coverage Results" MODIFIED="1569833695531" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/mip" />
+    <SUITE FILE_PATH="coverage/WSN$prepare_data.coverage" NAME="prepare_data Coverage Results" MODIFIED="1570241837171" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/mip" />
     <SUITE FILE_PATH="coverage/WSN$GA__1_.coverage" NAME="GA (1) Coverage Results" MODIFIED="1569642602847" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
     <SUITE FILE_PATH="coverage/WSN$init_log.coverage" NAME="init_log Coverage Results" MODIFIED="1568128261978" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/WSN$arg_parser.coverage" NAME="arg_parser Coverage Results" MODIFIED="1569833518818" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils" />
     <SUITE FILE_PATH="coverage/draft$bai2.coverage" NAME="bai2 Coverage Results" MODIFIED="1566649092100" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/WSN$GA.coverage" NAME="GA Coverage Results" MODIFIED="1568085193505" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/draft$bai3.coverage" NAME="bai3 Coverage Results" MODIFIED="1566651104661" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/WSN$mip.coverage" NAME="mip Coverage Results" MODIFIED="1570213949443" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/mip" />
+    <SUITE FILE_PATH="coverage/WSN$mip.coverage" NAME="mip Coverage Results" MODIFIED="1570249728808" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/mip" />
   </component>
 </project>
