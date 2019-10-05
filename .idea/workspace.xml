@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2bf88837-6ccf-436e-a608-17ac727b7cc5" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/mip/mip.py" beforeDir="false" afterPath="$PROJECT_DIR$/mip/mip.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mip/prepare_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/mip/prepare_data.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -143,7 +141,7 @@
       <workItem from="1569902330589" duration="2246000" />
       <workItem from="1569939962129" duration="5870000" />
       <workItem from="1570115663268" duration="2264000" />
-      <workItem from="1570200250564" duration="15621000" />
+      <workItem from="1570200250564" duration="16024000" />
     </task>
     <servers />
   </component>
@@ -170,11 +168,6 @@
           <url>file://$PROJECT_DIR$/mip/prepare_data.py</url>
           <line>29</line>
           <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/mip/mip.py</url>
-          <line>150</line>
-          <option name="timeStamp" value="9" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -3,7 +3,7 @@ from utils.arg_parser import parse_config
 from prepare_data import prepare
 
 
-def solve_ortools(inp, is_adj_matrix, distance_matrix, dict_constant):
+def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
     solver = pywraplp.Solver('wsn',
                              pywraplp.Solver.CBC_MIXED_INTEGER_PROGRAMMING)
 
@@ -154,4 +154,4 @@ def solve_ortools(inp, is_adj_matrix, distance_matrix, dict_constant):
 if __name__ == '__main__':
     _inp, _is_adj_matrix, _distance_matrix = prepare('/home/manhpp/Documents/Code/WSN/data/ga-dem1_r25_1.in')
     _dict_constant = parse_config()
-    solve_ortools(_inp, _is_adj_matrix, _distance_matrix, _dict_constant)
+    solve_by_or_tools(_inp, _is_adj_matrix, _distance_matrix, _dict_constant)
