@@ -70,11 +70,10 @@ def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
     )
 
     # Constraints
-    # r2
     solver.Add(solver.Sum(
-        connect_matrix[i, j] for i in range(num_all_vertex) for j in range(num_all_vertex)) <= inp.num_of_relays)
+        connect_matrix[0, j] for j in range(inp.num_of_relay_positions+1))
+               <= inp.num_of_relays)
 
-    # r4
     for j in range(num_all_vertex):
         for i in range(num_all_vertex):
             solver.Add(connect_matrix[i, j] <= is_adj_matrix[i][j])
@@ -88,8 +87,7 @@ def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
         solver.Add(1 - a[i] <= solver.Sum(connect_matrix[i, j] for j in range(num_all_vertex)))
 
     for i in range(num_all_vertex):
-        solver.Add(2 * e[i] >= a[i] + b[i])
-        solver.Add(e[i] <= a[i] + b[i])
+        solver.Add(e[i] == a[i] + b[i])
 
     for i in range(num_all_vertex):
         for j in range(num_all_vertex):
@@ -149,9 +147,11 @@ def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
     print('optimal value = ', solver.Objective().Value())
     print()
     print("Time = ", solver.WallTime(), " milliseconds")
+    return dict_constant["l"] * solver.Objective().Value()
 
 
 if __name__ == '__main__':
     _inp, _is_adj_matrix, _distance_matrix = prepare('/home/manhpp/Documents/Code/WSN/data/ga-dem1_r25_1.in')
     _dict_constant = parse_config()
-    solve_by_or_tools(_inp, _is_adj_matrix, _distance_matrix, _dict_constant)
+    result = solve_by_or_tools(_inp, _is_adj_matrix, _distance_matrix, _dict_constant)
+    print("result: ", result)
