@@ -78,7 +78,7 @@ def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
         for i in range(num_all_vertex):
             solver.Add(connect_matrix[i, j] <= is_adj_matrix[i][j])
 
-    for i in range(num_all_vertex):
+    for i in range(1, num_all_vertex):
         solver.Add(inp.num_of_sensors * b[i] >= solver.Sum(connect_matrix[i, j] for j in range(num_all_vertex)))
         solver.Add(b[i] <= solver.Sum(connect_matrix[i, j] for j in range(num_all_vertex)))
 
@@ -91,31 +91,31 @@ def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
 
     for i in range(num_all_vertex):
         for j in range(num_all_vertex):
-            solver.Add(muy[i, j] <= a[i])
+            solver.Add(muy[i, j] <= a[j])
             solver.Add(muy[i, j] <= connect_matrix[i, j])
-            solver.Add(muy[i, j] >= a[i] + connect_matrix[i, j] - 1)
+            solver.Add(muy[i, j] >= a[j] + connect_matrix[i, j] - 1)
 
     for i in range(num_all_vertex):
         for j in range(num_all_vertex):
-            solver.Add(delta[i, j] <= b[i])
+            solver.Add(delta[i, j] <= b[j])
             solver.Add(delta[i, j] <= connect_matrix[i, j])
-            solver.Add(delta[i, j] >= b[i] + connect_matrix[i, j] - 1)
+            solver.Add(delta[i, j] >= b[j] + connect_matrix[i, j] - 1)
 
     for i in range(num_all_vertex):
         for j in range(num_all_vertex):
-            solver.Add(gamma[i, j] <= solver.Sum(connect_matrix[i, k] for k in range(num_all_vertex)))
+            solver.Add(gamma[i, j] <= solver.Sum(connect_matrix[j, k] for k in range(num_all_vertex)))
             solver.Add(gamma[i, j] <= inp.num_of_sensors * delta[i, j])
             solver.Add(
                 gamma[i, j] >= solver.Sum(
-                    connect_matrix[i, k] for k in range(num_all_vertex)) - inp.num_of_sensors * (1 - delta[i, j]))
+                    connect_matrix[j, k] for k in range(num_all_vertex)) - inp.num_of_sensors * (1 - delta[i, j]))
 
     for i in range(num_all_vertex):
         for j in range(num_all_vertex):
-            solver.Add(phi[i, j] <= e[i])
+            solver.Add(phi[i, j] <= e[j])
             solver.Add(phi[i, j] <= connect_matrix[i, j])
-            solver.Add(phi[i, j] >= e[i] + connect_matrix[i, j] - 1)
+            solver.Add(phi[i, j] >= e[j] + connect_matrix[i, j] - 1)
 
-    for j in range(num_all_vertex):
+    for j in range(1, num_all_vertex):
         solver.Add(solver.Sum(phi[i, j] for i in range(num_all_vertex)) == 1)
 
     # hop constrained
