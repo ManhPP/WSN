@@ -17,11 +17,11 @@ class Constructor:
 
     def gen_graph(self, genes: list):
         list_vertices = deepcopy(self._list_vertex)
-        if len(genes) != 3 * (self.num_positions + self.num_sensors + 1):
-            raise Exception("Error Gen's length is not divisible by 3")
+        if len(genes) != 2 * (self.num_positions + self.num_sensors + 1):
+            raise Exception("Error Gen's length is not divisible by 2")
         graph = Graph()
-        dict_genes_order = {i: genes[i] for i in range(len(genes) // 3)}
-        dict_genes_value = {i - len(genes) // 3: genes[i] for i in range(len(genes) // 3, 2 * len(genes) // 3)}
+        dict_genes_order = {i: genes[i] for i in range(len(genes) // 2)}
+        dict_genes_value = {i - len(genes) // 2: genes[i] for i in range(len(genes) // 2, len(genes))}
         # dict_genes_local_search = {i - 2 * len(genes) // 3: genes[i] for i in range(2 * len(genes) // 3,
         # 3 * len(genes) // 3)}
 

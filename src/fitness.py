@@ -17,7 +17,7 @@ def get_fitness(genes: list, max_hop: int = 20, constructor=None):
     list_send = []
     list_send_receive = []
 
-    params = parse_config()
+    params, _ = parse_config()
 
     for i in vertices:
         if i in adjacent:

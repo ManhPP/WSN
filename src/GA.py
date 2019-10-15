@@ -1,5 +1,8 @@
-import random
+import os, sys
+lib_path = os.path.abspath(os.path.join('.'))
+sys.path.append(lib_path)
 
+import random
 from deap import base, creator, tools, algorithms
 import numpy as np
 from src.fitness import get_fitness
@@ -20,7 +23,7 @@ TERMINATE = 30
 
 
 def init_individual(num_sensors, num_pos):
-    length = 3 * (num_sensors + num_pos + 1)
+    length = 2 * (num_sensors + num_pos + 1)
     individual = list(np.random.uniform(0, 1, size=(length,)))
     return creator.Individual(individual)
 
@@ -87,12 +90,13 @@ def run_ga(inp: WsnInput, logger=None):
             break
 
     logger.info("Finished! Best individual: %s, fitness: %s" % (best_ind, min_value))
+    tmp = constructor.gen_graph(best_ind)
     return best_ind
 
 
 if __name__ == '__main__':
     logger = init_log()
-    path = '/home/manhpp/Documents/Code/WSN/data/ga-dem1_r25_1.in'
+    path = '/home/manhpp/d/Code/WSN/data/test.json'
     logger.info("prepare input data from path %s" % path)
     inp = WsnInput.from_file(path)
     logger.info("num generation: %s" % N_GENS)
