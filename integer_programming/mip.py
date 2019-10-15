@@ -1,3 +1,7 @@
+import time, os, sys
+lib_path = os.path.abspath(os.path.join('..'))
+sys.path.append(lib_path)
+
 from ortools.linear_solver import pywraplp
 from utils.arg_parser import parse_config
 from integer_programming.prepare_data import prepare
@@ -6,7 +10,7 @@ from integer_programming.prepare_data import prepare
 def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
     solver = pywraplp.Solver('wsn',
                              pywraplp.Solver.CBC_MIXED_INTEGER_PROGRAMMING)
-
+    
     num_all_vertex = len(inp.all_vertex)
     available_edges = []
     connect_matrix = {}
@@ -151,7 +155,8 @@ def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
 
 
 if __name__ == '__main__':
-    _inp, _is_adj_matrix, _distance_matrix = prepare('/home/manhpp/Documents/Code/WSN/data/ga-dem1_r25_1.in')
-    _dict_constant = parse_config()
+    _dict_constant, _data_path = parse_config()
+
+    _inp, _is_adj_matrix, _distance_matrix = prepare(_data_path)
     result = solve_by_or_tools(_inp, _is_adj_matrix, _distance_matrix, _dict_constant)
     print("result: ", result)

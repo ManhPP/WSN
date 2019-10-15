@@ -2,8 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2bf88837-6ccf-436e-a608-17ac727b7cc5" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/utils/test_dir.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/integer_programming/mip.py" beforeDir="false" afterPath="$PROJECT_DIR$/integer_programming/mip.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/arg_parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/arg_parser.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/config.ini" beforeDir="false" afterPath="$PROJECT_DIR$/utils/config.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/init_log.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/init_log.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -113,16 +117,40 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="test_dir" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="WSN" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/utils" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/utils/test_dir.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue="Python.arg_parser" />
       <item itemvalue="Python.prepare_data" />
       <item itemvalue="Python.mip" />
+      <item itemvalue="Python.test_dir" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Python.mip" />
-        <item itemvalue="Python.prepare_data" />
         <item itemvalue="Python.arg_parser" />
+        <item itemvalue="Python.test_dir" />
+        <item itemvalue="Python.prepare_data" />
       </list>
     </recent_temporary>
   </component>
@@ -152,6 +180,11 @@
       <workItem from="1570348488436" duration="9464000" />
       <workItem from="1570503214675" duration="3671000" />
       <workItem from="1570546944763" duration="554000" />
+      <workItem from="1570726072159" duration="244000" />
+      <workItem from="1570728938059" duration="602000" />
+      <workItem from="1570813512991" duration="11000" />
+      <workItem from="1570846964777" duration="2131000" />
+      <workItem from="1570862978568" duration="5087000" />
     </task>
     <servers />
   </component>
@@ -183,13 +216,14 @@
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/WSN$prepare_data.coverage" NAME="prepare_data Coverage Results" MODIFIED="1570241837171" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/mip" />
-    <SUITE FILE_PATH="coverage/WSN$GA__1_.coverage" NAME="GA (1) Coverage Results" MODIFIED="1569642602847" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
-    <SUITE FILE_PATH="coverage/WSN$init_log.coverage" NAME="init_log Coverage Results" MODIFIED="1568128261978" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/WSN$arg_parser.coverage" NAME="arg_parser Coverage Results" MODIFIED="1569833518818" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils" />
-    <SUITE FILE_PATH="coverage/draft$bai2.coverage" NAME="bai2 Coverage Results" MODIFIED="1566649092100" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/WSN$GA.coverage" NAME="GA Coverage Results" MODIFIED="1568085193505" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/draft$bai3.coverage" NAME="bai3 Coverage Results" MODIFIED="1566651104661" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/WSN$mip.coverage" NAME="mip Coverage Results" MODIFIED="1570518417413" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/integer_programming" />
+    <SUITE FILE_PATH="coverage/WSN$init_log.coverage" NAME="init_log Coverage Results" MODIFIED="1568128261978" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/WSN$mip.coverage" NAME="mip Coverage Results" MODIFIED="1570864853130" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/integer_programming" />
+    <SUITE FILE_PATH="coverage/WSN$test_dir.coverage" NAME="test_dir Coverage Results" MODIFIED="1570863761486" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils" />
+    <SUITE FILE_PATH="coverage/WSN$prepare_data.coverage" NAME="prepare_data Coverage Results" MODIFIED="1570241837171" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/mip" />
+    <SUITE FILE_PATH="coverage/WSN$GA.coverage" NAME="GA Coverage Results" MODIFIED="1568085193505" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/draft$bai2.coverage" NAME="bai2 Coverage Results" MODIFIED="1566649092100" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/WSN$GA__1_.coverage" NAME="GA (1) Coverage Results" MODIFIED="1569642602847" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+    <SUITE FILE_PATH="coverage/WSN$arg_parser.coverage" NAME="arg_parser Coverage Results" MODIFIED="1570864439437" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/utils" />
   </component>
 </project>

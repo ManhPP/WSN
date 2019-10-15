@@ -1,6 +1,7 @@
 from argparse import ArgumentParser
 import configparser
 from utils.init_log import init_log
+from pathlib import Path
 
 
 def parse_argument():
@@ -16,7 +17,8 @@ def parse_argument():
 
 def parse_config():
     parser = configparser.ConfigParser()
-    parser.read("/home/manhpp/Documents/Code/WSN/utils/config.ini")
+    config_file_path = Path(__file__).parent
+    parser.read(f"{config_file_path}/config.ini")
     dict_constant = dict()
     dict_constant["epsilon_fs"] = parser.getfloat("CONSTANT", "epsilon_fs")
     dict_constant["epsilon_mp"] = parser.getfloat("CONSTANT", "epsilon_mp")
@@ -25,7 +27,8 @@ def parse_config():
     dict_constant["E_TX"] = parser.getfloat("CONSTANT", "E_TX")
     dict_constant["l"] = parser.getint("CONSTANT", "l")
 
-    return dict_constant
+    data_path = f"{config_file_path.parent}/{parser.get('PATH', 'data_path')}"
+    return dict_constant, data_path
 
 
 if __name__ == '__main__':
