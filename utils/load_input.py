@@ -49,9 +49,12 @@ class WsnInput:
         all_vertex.extend(sensors)
         for i in all_vertex:
             for j in all_vertex:
-                if distance(i, j) <= radius and distance(i, j) != 0:
-                    i.add_adjacent_vertex(j)
-                    j.add_adjacent_vertex(i)
+                dis = distance(i, j)
+                if dis <= radius and distance(i, j) != 0:
+                    if j not in i.adjacent_vertices:
+                        i.add_adjacent_vertex(j)
+                    if i not in j.adjacent_vertices:
+                        j.add_adjacent_vertex(i)
 
         return cls(max_hop, num_of_relay_positions, num_of_relays, num_of_sensors, radius, relay_positions, sensors, all_vertex, BS)
 

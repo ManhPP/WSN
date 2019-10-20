@@ -1,10 +1,11 @@
 import time, os, sys
-lib_path = os.path.abspath(os.path.join('..'))
+lib_path = os.path.abspath(os.path.join('.'))
 sys.path.append(lib_path)
 
 from ortools.linear_solver import pywraplp
 from utils.arg_parser import parse_config
 from integer_programming.prepare_data import prepare
+import pulp
 
 
 def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
@@ -153,6 +154,25 @@ def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
     print("Time = ", solver.WallTime(), " milliseconds")
     return dict_constant["l"] * solver.Objective().Value()
 
+def solve_by_pulp(inp, is_adj_matrix, distance_matrix, dict_constant):
+    num_all_vertex = len(inp.all_vertex)
+    available_edges = []
+    connect_matrix = {}
+    muy = {}
+    delta = {}
+    gamma = {}
+    phi = {}
+    z = {}
+    i_matrix = {}
+    j_matrix = {}
+
+    a = [0 for _ in range(num_all_vertex)]
+    b = [0 for _ in range(num_all_vertex)]
+    e = [0 for _ in range(num_all_vertex)]
+    pulp.LpProblem("wsn")
+
+
+    
 
 if __name__ == '__main__':
     _dict_constant, _data_path = parse_config()
