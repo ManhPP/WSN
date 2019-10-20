@@ -1,3 +1,7 @@
+import time, os, sys
+lib_path = os.path.abspath(os.path.join('.'))
+sys.path.append(lib_path)
+
 from DS.edge import Edge
 from DS.graph import Graph, check_condition
 from DS.vertex import Vertex
@@ -62,7 +66,7 @@ if __name__ == '__main__':
     # for i in range(6):
     #     vertices[i] = Vertex(i)
 
-    gen = [0.55, 0.75, 0.35, 0.65, 0.45, 0.99, 0.5, 0.4, 0.9, 0.3, 0.4, 0.6, 0.5, 0.7, 0.2, 0.75, 0.22, 0.57, 0.45, 0.66, 0.14, 0.5, 0.2, 0.6]
+    gen = [0.55, 0.75, 0.35, 0.65, 0.45, 0.99, 0.5, 0.4, 0.9, 0.3, 0.4, 0.6, 0.5, 0.7, 0.2, 0.75]
     vertices = [None for _ in range(8)]
     for i in range(8):
         vertices[i] = Vertex(name=i)
@@ -78,6 +82,7 @@ if __name__ == '__main__':
 
     constructor = Constructor(3, 2, 4, vertices)
     a = constructor.gen_graph(gen)
+    b = a.connected_component()
     print(a)
     print(get_hop(a, vertices[5]))
     print(vertices[5].hop)

@@ -22,9 +22,15 @@ MUTPB = 0.2
 TERMINATE = 30
 
 
-def init_individual(num_sensors, num_pos):
+def init_individual(constructor, num_sensors, num_pos):
     length = 2 * (num_sensors + num_pos + 1)
-    individual = list(np.random.uniform(0, 1, size=(length,)))
+    # individual = list(np.random.uniform(0, 1, size=(length,)))
+    individual = [random.uniform(0, 1) for _ in range(length)]
+    g = constructor.gen_graph(individual)
+    while not g.is_connected:
+        individual = [random.uniform(0, 1) for _ in range(length)]
+        g = constructor.gen_graph(individual)
+    
     return creator.Individual(individual)
 
 
@@ -41,7 +47,7 @@ def run_ga(inp: WsnInput, logger=None):
     toolbox = base.Toolbox()
     stats = tools.Statistics(key=lambda ind: ind.fitness.values)
 
-    toolbox.register("individual", init_individual, inp.num_of_sensors, inp.num_of_relay_positions)
+    toolbox.register("individual", init_individual, constructor, inp.num_of_sensors, inp.num_of_relay_positions)
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
     toolbox.register("mate", tools.cxUniform, indpb=0.2)
     toolbox.register("mutate", tools.mutGaussian, mu=0, sigma=0.2, indpb=0.2)

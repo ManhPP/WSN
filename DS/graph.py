@@ -17,6 +17,13 @@ class Graph:
             for neighbour in self.graph[vertex]:
                 self.edges.append(Edge(vertex, neighbour))
         return edges
+    @property
+    def is_connected(self):
+        tmp = self.connected_component()
+        if len(tmp) > 1:
+            return False
+        else:
+            return True
 
     def add_edge(self, edge: Edge):
         if edge.src_vertex in self.graph.keys():
@@ -30,6 +37,25 @@ class Graph:
 
     def remove_edge(self, edge: Edge):
         self.graph[edge.src_vertex].remove(edge.dst_vertex)
+
+    def DFS(self, i, visited, component):
+        visited.append(i)
+        component.append(i)
+        for j in self.graph[i]:
+            if (j not in visited):
+                self.DFS(j, visited, component)
+
+    def connected_component(self):
+        v = self.vertices
+        visited = []
+        component = []
+        result = []
+        for i in v:
+            if i not in visited:
+                self.DFS(i, visited, component)
+                result.append(component)
+                component = []
+        return result
 
     def __str__(self):
         return str(self.graph)

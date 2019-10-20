@@ -10,7 +10,9 @@ def get_fitness(genes: list, max_hop: int = 20, constructor=None):
     if constructor is None:
         raise Exception("Error: Must init constructor!")
     g = constructor.gen_graph(genes)
-    graph = g.graph
+    if not g.is_connected:
+        return float('inf')
+    graph = g.graph    
     vertices = g.vertices
     all_values = itertools.chain.from_iterable(graph.values())
     adjacent = list(set(all_values))
@@ -41,7 +43,7 @@ def get_fitness(genes: list, max_hop: int = 20, constructor=None):
 
     for i in vertices:
         if i.hop > max_hop:
-            print(i.hop)
+            # print(i.hop)
             return float('inf')
         # result += 9999 * max(i.hop - max_hop, 0)
 
