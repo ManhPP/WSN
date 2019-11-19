@@ -1,3 +1,6 @@
+import time, os, sys
+lib_path = os.path.abspath(os.path.join('.'))
+sys.path.append(lib_path)
 from utils.load_input import WsnInput
 from DS.position import distance
 
@@ -25,5 +28,5 @@ def prepare(path):
 
 
 if __name__ == '__main__':
-    a = prepare('/home/manhpp/Documents/Code/WSN/data/ga-dem1_r25_1.in')
+    a = prepare('/home/manhpp/d/Code/WSN/data/test.json')
     print(a)

@@ -18,7 +18,6 @@ def get_fitness(genes: list, max_hop: int = 20, constructor=None):
     adjacent = list(set(all_values))
     list_send = []
     list_send_receive = []
-
     params, _ = parse_config()
 
     for i in vertices:
@@ -42,7 +41,7 @@ def get_fitness(genes: list, max_hop: int = 20, constructor=None):
     result *= params['l']
 
     for i in vertices:
-        if i.hop > max_hop:
+        if get_hop(g, i) > max_hop:
             # print(i.hop)
             return float('inf')
         # result += 9999 * max(i.hop - max_hop, 0)
@@ -56,7 +55,6 @@ def get_hop(g: Graph, vertex: Vertex):
     graph = g.graph
 
     def cal(v):
-        sys.setrecursionlimit(1500)
         if v == g.vertices[0]:
             return 0
         else:

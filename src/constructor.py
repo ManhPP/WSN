@@ -57,6 +57,7 @@ class Constructor:
                     # print(edge)
                     # print(self._list_vertex[j], ' ==> ', vertex)
                     break
+        
         return graph
 
 
