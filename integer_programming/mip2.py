@@ -67,73 +67,103 @@ def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
     )
 
     # Constraints
+
+    #r16
     solver.Add(solver.Sum(
         connect_matrix[0, j] for j in range(inp.num_of_relay_positions+1))
-               == inp.num_of_relays)
+               <= inp.num_of_relays)
+    
     # rang buoc tinh lien thong va chu trinh cua cay
+
+    #r17
     solver.Add(solver.Sum(
         connect_matrix[i,j] for i in range(num_all_vertex) for j in range(num_all_vertex))
                == inp.num_of_relays + inp.num_of_sensors)
     
+    #r18
     for sub in subs:
-        solver.Add(len(sub) - solver.Sum(connect_matrix[sub[i], sub[j]] for j in range(i+1, len(sub)) for i in range(len(sub)-1)) - solver.Sum(connect_matrix[sub[j], sub[i]] for j in range(i+1, len(sub)) for i in range(len(sub)-1)) >= 1 )
-    # for sub in subs:
-    #     if len(sub) == 2:
-    #         solver.Add(connect_matrix[sub[0], sub[1]] + connect_matrix[sub[1],sub[0]] <= 1)  
+        solver.Add(solver.Sum((connect_matrix[sub[i], sub[j]] + connect_matrix[sub[j], sub[i]]) for j in range(i+1, len(sub)) for i in range(len(sub)-1)) <= len(sub) - 1 )
+    
+    #r20
     for j in range(num_all_vertex):
         for i in range(num_all_vertex):
             solver.Add(connect_matrix[i, j] <= is_adj_matrix[i][j])
 
+
     for i in range(1, num_all_vertex):
+        #r3
         solver.Add(inp.num_of_sensors * b[i] >= solver.Sum(connect_matrix[i, j] for j in range(num_all_vertex)))
+        #r4
         solver.Add(b[i] <= solver.Sum(connect_matrix[i, j] for j in range(num_all_vertex)))
+
     for i in range(inp.num_of_relay_positions + 1, num_all_vertex):
+        #r1
         solver.Add(inp.num_of_sensors * (1 - a[i]) >= solver.Sum(connect_matrix[i, j] for j in range(num_all_vertex)))
+        #r2
         solver.Add(1 - a[i] <= solver.Sum(connect_matrix[i, j] for j in range(num_all_vertex)))
+
     for i in range(1, inp.num_of_relay_positions + 1):
+
         solver.Add(a[i] == 0)
     for i in range(num_all_vertex):
+        #r5
         solver.Add(e[i] == a[i] + b[i])
-    for i in range(1, num_all_vertex):    
-        solver.Add(e[i] == solver.Sum(connect_matrix[j, i] for j in range(num_all_vertex)))
+
+    for j in range(1, num_all_vertex):    
+        #r6
+        solver.Add(e[j] == solver.Sum(connect_matrix[i, j] for i in range(num_all_vertex)))
 
 
     for i in range(num_all_vertex):
         for j in range(num_all_vertex):
+            #r7
             solver.Add(muy[i, j] <= a[j])
+            #r8
             solver.Add(muy[i, j] <= connect_matrix[i, j])
+            #r9
             solver.Add(muy[i, j] >= a[j] + connect_matrix[i, j] - 1)
 
     for i in range(num_all_vertex):
         for j in range(num_all_vertex):
+            #r10
             solver.Add(delta[i, j] <= b[j])
+            #r11
             solver.Add(delta[i, j] <= connect_matrix[i, j])
+            #r12
             solver.Add(delta[i, j] >= b[j] + connect_matrix[i, j] - 1)
 
     for i in range(num_all_vertex):
         for j in range(num_all_vertex):
+            #r13
             solver.Add(gamma[i, j] <= solver.Sum(connect_matrix[j, k] for k in range(num_all_vertex)))
+            #r14
             solver.Add(gamma[i, j] <= inp.num_of_sensors * delta[i, j])
+            #r15
             solver.Add(
                 gamma[i, j] >= solver.Sum(
                     connect_matrix[j, k] for k in range(num_all_vertex)) - inp.num_of_sensors * (1 - delta[i, j]))
 
     for j in range(num_all_vertex):
+        #r16
         solver.Add(solver.Sum(connect_matrix[i, j] for i in range(num_all_vertex)) <= 1)
     
     # hop constrained
 
+    #r21
     for k in range(1, num_all_vertex):
         for j in range(1, num_all_vertex):
             if  j != k:
                 solver.Add(solver.Sum(y[i, j, k] for i in range(num_all_vertex)) - solver.Sum(y[j, i, k] for i in range(1, num_all_vertex)) == 0)
     
+    #r22
     for j in range(1, num_all_vertex):
         solver.Add(solver.Sum(y[i, j, j] for i in range(num_all_vertex)) == e[j])
 
+    #r23
     for k in range(1, num_all_vertex):
         solver.Add(solver.Sum(y[i, j, k] for i in range(num_all_vertex) for j in range(1, num_all_vertex)) <= inp.max_hop)
 
+    #r24
     for k in range(1, num_all_vertex):
         for i in range(num_all_vertex):
             for j in range(1, num_all_vertex):

@@ -60,7 +60,7 @@ def run_ga(inp: WsnInput, logger=None):
 
     pop = toolbox.population(POP_SIZE)
     best_ind = toolbox.clone(pop[0])
-    # logger.info("init best individual: %s, fitness: %s" % (best_ind, toolbox.evaluate(best_ind)))
+    logger.info("init best individual: %s, fitness: %s" % (best_ind, toolbox.evaluate(best_ind)))
     prev = -1  # use for termination
     count_term = 0  # use for termination
 
@@ -107,11 +107,11 @@ if __name__ == '__main__':
     for i in range(8,9):
         logger = init_log()
         path = '/home/manhpp/d/Code/WSN/data/uu-dem' + str(i) + '_r25_1.in'
-        # path = '/home/manhpp/d/Code/WSN/data/test.json'
+        path = '/home/manhpp/d/Code/WSN/data/test.json'
 
         logger.info("prepare input data from path %s" % path)
         inp = WsnInput.from_file(path)
-        inp.max_hop = 20
+        # inp.max_hop = 20
         logger.info("num generation: %s" % N_GENS)
         logger.info("population size: %s" % POP_SIZE)
         logger.info("crossover probability: %s" % CXPB)
