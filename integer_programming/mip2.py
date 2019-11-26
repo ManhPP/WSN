@@ -35,9 +35,9 @@ def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
     delta = {}
     gamma = {}
     y = {}
-
+    print(num_all_vertex)
     subs = sub_lists([i for i in range(num_all_vertex)])
-
+    print(len(subs))
     a = [0 for _ in range(num_all_vertex)]
     b = [0 for _ in range(num_all_vertex)]
     e = [0 for _ in range(num_all_vertex)]
@@ -333,6 +333,7 @@ if __name__ == '__main__':
     _dict_constant, _data_path = parse_config()
 
     _inp, _is_adj_matrix, _distance_matrix = prepare(_data_path)
+    print("load data ok")
     result, connect_matrix = solve_by_or_tools(_inp, _is_adj_matrix, _distance_matrix, _dict_constant)
     # result = solve_by_pulp(_inp, _is_adj_matrix, _distance_matrix, _dict_constant)
 
