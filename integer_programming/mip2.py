@@ -82,7 +82,12 @@ def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
     
     #r18
     for sub in subs:
-        solver.Add(solver.Sum((connect_matrix[sub[i], sub[j]] + connect_matrix[sub[j], sub[i]]) for j in range(i+1, len(sub)) for i in range(len(sub)-1)) <= len(sub) - 1 )
+        sums = []
+        for i in range(len(sub) - 1):
+            for j in range(i+1, len(sub)):
+                sums.append(connect_matrix[sub[i], sub[j]] + connect_matrix[sub[j], sub[i]])
+        solver.Add(solver.Sum(sums) <= len(sub) - 1)
+        # solver.Add(solver.Sum((connect_matrix[sub[i], sub[j]] + connect_matrix[sub[j], sub[i]]) for j in range(i+1, len(sub)) for i in range(len(sub)-1)) <= len(sub) - 1 )
     
     #r20
     for j in range(num_all_vertex):
@@ -208,7 +213,7 @@ def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
 def solve_by_pulp(inp, is_adj_matrix, distance_matrix, dict_constant):
     num_all_vertex = len(inp.all_vertex)
     
-    connect_matrix = {}
+    connect_matrix = {} 
     muy = {}
     delta = {}
     gamma = {}
