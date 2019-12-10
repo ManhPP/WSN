@@ -3,24 +3,25 @@ lib_path = os.path.abspath(os.path.join('.'))
 sys.path.append(lib_path)
 
 from DS.edge import Edge
-from DS.graph import Graph, check_condition
+from DS.graph import Graph, check_condition 
 from DS.vertex import Vertex
 from src.fitness import get_fitness, get_hop
 from copy import deepcopy
 
 
 class Constructor:
-    def __init__(self, num_sensors, num_relays, num_positions, list_vertices: Vertex = None):
-        if list_vertices is None:
-            self._list_vertex = []
+    def __init__(self, num_sensors, num_relays, num_positions, origin_list_vertices: Vertex = None):
+        if origin_list_vertices is None:
+            self._origin_list_vertices = []
         else:
-            self._list_vertex = list_vertices
+            self._origin_list_vertices = origin_list_vertices
+        
         self.num_sensors = num_sensors
         self.num_relays = num_relays
         self.num_positions = num_positions
 
     def gen_graph(self, genes: list):
-        list_vertices = deepcopy(self._list_vertex)
+        list_vertices = deepcopy(self._origin_list_vertices)
         if len(genes) != 2 * (self.num_positions + self.num_sensors + 1):
             raise Exception("Error Gen's length is not divisible by 2")
         graph = Graph()
@@ -57,7 +58,25 @@ class Constructor:
                     # print(edge)
                     # print(self._list_vertex[j], ' ==> ', vertex)
                     break
-        
+
+        connected_component = graph.connected_component()
+        visited_component = []
+        visited_component.append(connected_component.pop(0))
+        a = len(connected_component)
+        while len(connected_component) > 0:
+            dict_order_adjacent = dict()
+            vertex = connected_component[0][0]
+            for j in vertex.adjacent_vertices:
+                if j.name not in ignored_position:
+                    dict_order_adjacent[j.name] = dict_genes_value[j.name]
+            order_adjacent = list(dict(sorted(dict_order_adjacent.items(), key=lambda x: x[1])).keys())
+            for j in order_adjacent:
+                edge = Edge(list_vertices[j], vertex)
+                if j not in connected_component[0]:
+                    graph.add_edge(edge)
+                    visited_component.append(connected_component.pop(0))
+                    break
+        tmp = graph.connected_component()
         return graph
 
 
@@ -67,7 +86,7 @@ if __name__ == '__main__':
     # for i in range(6):
     #     vertices[i] = Vertex(i)
 
-    gen = [0.55, 0.75, 0.35, 0.65, 0.45, 0.99, 0.5, 0.4, 0.9, 0.3, 0.4, 0.6, 0.5, 0.7, 0.2, 0.75]
+    gen = [0.6251513271684599, 0.5528831505283568, 0.8980469897139586, 0.4042381059968526, 0.8589958641670472, 0.03531000637583104, 0.5383968084959145, 0.48467013038204765, 0.9250815005319558, 0.8673372122582647, 0.6115292237246052, 0.3618104115788976, 0.9875847459282959, 0.9582953018852398, ...]
     vertices = [None for _ in range(8)]
     for i in range(8):
         vertices[i] = Vertex(name=i)

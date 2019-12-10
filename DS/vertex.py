@@ -45,5 +45,9 @@ class Vertex(Position):
     def __hash__(self):
         return hash(str(self.name))
 
+    # def __repr__(self):
+    #     return '%s (%f %f %f)' % (str(self.name + 1), self.x, self.y, self.z)
+
     def __repr__(self):
-        return '%s (%f %f %f)' % (str(self.name + 1), self.x, self.y, self.z)
+        return '%s' % (str(self.name + 1))
+        

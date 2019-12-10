@@ -32,6 +32,7 @@ def init_individual(constructor, num_sensors, num_pos):
         individual = [random.uniform(0, 1) for _ in range(length)]
         g = constructor.gen_graph(individual)
         print(i)
+        old = individual
         i += 1
     print("====Thanh cong====")
     return creator.Individual(individual)
@@ -107,11 +108,11 @@ if __name__ == '__main__':
     for i in range(8,9):
         logger = init_log()
         path = '/home/manhpp/d/Code/WSN/data/uu-dem' + str(i) + '_r25_1.in'
-        path = '/home/manhpp/d/Code/WSN/data/test.json'
+        # path = '/home/manhpp/d/Code/WSN/data/test.json'
 
         logger.info("prepare input data from path %s" % path)
         inp = WsnInput.from_file(path)
-        # inp.max_hop = 20
+        inp.max_hop = 20
         logger.info("num generation: %s" % N_GENS)
         logger.info("population size: %s" % POP_SIZE)
         logger.info("crossover probability: %s" % CXPB)

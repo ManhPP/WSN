@@ -13,7 +13,7 @@ from integer_programming.prepare_data import prepare
 from utils.arg_parser import parse_config
 
 
-def sub_lists(my_list):
+def sub_lists(my_list, n):
 	subs = []
 	for i in range(0, len(my_list)+1):
 	    temp = [list(x) for x in combinations(my_list, i)]
@@ -21,7 +21,7 @@ def sub_lists(my_list):
 	        subs.extend(temp)
 	result = []
 	for i in subs:
-		if len(i) > 1:
+		if len(i) > 1 and len(i) <= n:
 			result.append(i)
 	return result
 
@@ -36,7 +36,7 @@ def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
     gamma = {}
     y = {}
     print(num_all_vertex)
-    subs = sub_lists([i for i in range(num_all_vertex)])
+    subs = sub_lists([i for i in range(num_all_vertex)], num_all_vertex)
     print(len(subs))
     a = [0 for _ in range(num_all_vertex)]
     b = [0 for _ in range(num_all_vertex)]
@@ -340,7 +340,7 @@ if __name__ == '__main__':
     print("result: ", result)
 
  
-    subs = sub_lists([i for i in range(14)])
+    subs = sub_lists([i for i in range(14)], len(_inp.all_vertex))
     for sub in subs:
         sum = 0
         for i in range(len(sub)-1):
