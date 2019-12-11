@@ -3,7 +3,7 @@ lib_path = os.path.abspath(os.path.join('.'))
 sys.path.append(lib_path)
 
 from DS.edge import Edge
-from DS.graph import Graph, check_condition 
+from DS.graph import Graph, Graph2, check_condition 
 from DS.vertex import Vertex
 from src.fitness import get_fitness, get_hop
 from copy import deepcopy
@@ -25,7 +25,7 @@ class Constructor:
         if len(genes) != self.num_positions + len(self.dict_ind2edge):
             raise Exception("Error Gen's length is not appropriate")
 
-        graph = Graph()
+        graph = Graph2()
 
         dict_edge_values = {i - self.num_positions: genes[i] for i in range(self.num_positions,len(genes))}
 
@@ -37,4 +37,7 @@ class Constructor:
         order = list(dict(sorted(list(dict_edge_values.items())[self.num_positions+1:], key=lambda x: x[1])).keys())
 
         for i in range(len(order)):
-            pass
+            graph.add_edge(self.dict_ind2edge[i])
+            if len(graph.edges) == self.num_relays + self.num_sensors:
+                break
+        return graph

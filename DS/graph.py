@@ -137,13 +137,9 @@ class Graph2:
         else:
             self.graph[v2] = [v1]
         
-        if is_cyclic2(self):
+        if self.isCyclic2():
             self.graph[v1].remove[v2]
-            self.graph[v2].remove[v1]
-            if len(self.graph[v1]) == 0:
-                pass
-            if len(self.graph[v2]) == 0:
-                pass  
+            self.graph[v2].remove[v1] 
 
 
     def DFS(self, i, visited, component):
@@ -164,39 +160,38 @@ class Graph2:
                 result.append(component)
                 component = []
         return result
-
+    
+    def isCyclicUtil2(self, v, visited, parent): 
+            graph = self.graph
+            #Mark the current node as visited  
+            visited[v]= True
+    
+            #Recur for all the vertices adjacent to this vertex 
+            for i in graph[v]: 
+                # If the node is not visited then recurse on it 
+                if  visited[i]==False :  
+                    if(self.isCyclicUtil2(i,visited,v)): 
+                        return True
+                # If an adjacent vertex is visited and not parent of current vertex, 
+                # then there is a cycle 
+                elif  parent!=i: 
+                    return True
+            
+            return False
+            
+    
+    #Returns true if the graph contains a cycle, else false. 
+    def isCyclic2(self): 
+        # Mark all the vertices as not visited 
+        visited =[False]*len(self.graph.keys) 
+        # Call the recursive helper function to detect cycle in different 
+        #DFS trees 
+        for i in range(len(g.graph.keys)): 
+            if visited[i] ==False: #Don't recur for u if it is already visited 
+                if(self.isCyclicUtil2(i,visited,-1))== True: 
+                    return True
+            
+        return False
     def __str__(self):
         return str(self.graph)
 
-
-def isCyclicUtil2(g: Graph2, v, visited, parent): 
-        graph = g.graph
-        #Mark the current node as visited  
-        visited[v]= True
-  
-        #Recur for all the vertices adjacent to this vertex 
-        for i in graph[v]: 
-            # If the node is not visited then recurse on it 
-            if  visited[i]==False :  
-                if(isCyclicUtil2(g, i,visited,v)): 
-                    return True
-            # If an adjacent vertex is visited and not parent of current vertex, 
-            # then there is a cycle 
-            elif  parent!=i: 
-                return True
-          
-        return False
-           
-   
-#Returns true if the graph contains a cycle, else false. 
-def isCyclic2(g:Graph2): 
-    # Mark all the vertices as not visited 
-    visited =[False]*len(g.graph.keys) 
-    # Call the recursive helper function to detect cycle in different 
-    #DFS trees 
-    for i in range(len(g.graph.keys)): 
-        if visited[i] ==False: #Don't recur for u if it is already visited 
-            if(isCyclicUtil2(g, i,visited,-1))== True: 
-                return True
-        
-    return False

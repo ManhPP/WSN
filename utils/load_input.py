@@ -1,12 +1,17 @@
+import time, os, sys
+lib_path = os.path.abspath(os.path.join('.'))
+sys.path.append(lib_path)
+
 import json
 from DS.position import distance
 from DS.vertex import Vertex
+from DS.edge import Edge2
 from utils.init_log import init_log
 
 
 class WsnInput:
     def __init__(self, _max_hop=20, _num_of_relay_positions=40, _num_of_relays=20, _num_of_sensors=40,
-                 _radius=20., _relays=None, _sensors=None, _all_vertex=None, _bs=None):
+                 _radius=20., _relays=None, _sensors=None, _all_vertex=None, _bs=None, _dict_ind2edge=None):
         self.max_hop = _max_hop
         self.relays = _relays
         self.sensors = _sensors
@@ -16,6 +21,7 @@ class WsnInput:
         self.radius = _radius
         self.BS = _bs
         self.all_vertex = _all_vertex
+        self.dict_ind2edge = _dict_ind2edge
 
     @classmethod
     def from_file(cls, path):
@@ -33,6 +39,7 @@ class WsnInput:
         relay_positions = []
         sensors = []
         name = 0
+        dict_ind2edge = {}
         BS = Vertex.from_dict(d['center'], "bs", name)
         name += 1
 
@@ -51,12 +58,17 @@ class WsnInput:
             for j in all_vertex:
                 dis = distance(i, j)
                 if dis <= radius and distance(i, j) != 0:
+                    edge = Edge2(i, j)
+                    if edge not in dict_ind2edge.values():
+                        index = len(dict_ind2edge)
+                        dict_ind2edge[index + 1] = edge
+
                     if j not in i.adjacent_vertices:
                         i.add_adjacent_vertex(j)
                     if i not in j.adjacent_vertices:
                         j.add_adjacent_vertex(i)
 
-        return cls(max_hop, num_of_relay_positions, num_of_relays, num_of_sensors, radius, relay_positions, sensors, all_vertex, BS)
+        return cls(max_hop, num_of_relay_positions, num_of_relays, num_of_sensors, radius, relay_positions, sensors, all_vertex, BS, dict_ind2edge)
 
     def freeze(self):
         self.sensors = tuple(self.sensors)
@@ -72,7 +84,8 @@ class WsnInput:
             'sensors': list(map(lambda x: x.to_dict(), self.sensors)),
             'all_vertex': list(map(lambda x: x.to_dict(), self.all_vertex)),
             'center': self.BS.to_dict(),
-            'radius': self.radius
+            'radius': self.radius,
+            'edge': self.dict_ind2edge
         }
 
     def reset_all_hop(self):
@@ -98,5 +111,5 @@ class WsnInput:
 
 
 if __name__ == "__main__":
-    inp = WsnInput.from_file('/home/manhpp/Documents/Code/WSN/data/ga-dem1_r25_1.in')
+    inp = WsnInput.from_file('/home/manhpp/d/Code/WSN/data/test.json')
     print(inp.relays[0])
