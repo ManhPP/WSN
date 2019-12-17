@@ -1,5 +1,3 @@
-import sys
-
 from DS.graph import Graph
 from DS.vertex import Vertex
 from utils.arg_parser import parse_config
@@ -12,7 +10,10 @@ def get_fitness(genes: list, max_hop: int = 20, constructor=None):
     g = constructor.gen_graph(genes)
     if not g.is_connected:
         return float('inf')
-    graph = g.graph    
+    graph = g.graph
+    for v in graph.keys():
+        if v.hop > max_hop:
+            return float('inf')
     vertices = g.vertices
     all_values = itertools.chain.from_iterable(graph.values())
     adjacent = list(set(all_values))
@@ -22,9 +23,9 @@ def get_fitness(genes: list, max_hop: int = 20, constructor=None):
 
     for i in vertices:
         if i in adjacent:
-            if len(graph[i]) != 0:
+            if len(graph[i]) > 1:
                 list_send_receive.append(i)
-            else:
+            elif len(graph[i]) == 1:
                 list_send.append(i)
 
     result = 0
@@ -40,29 +41,4 @@ def get_fitness(genes: list, max_hop: int = 20, constructor=None):
                 break
     result *= params['l']
 
-    for i in vertices:
-        if get_hop(g, i) > max_hop:
-            # print(i.hop)
-            return float('inf')
-        # result += 9999 * max(i.hop - max_hop, 0)
-
     return result
-
-
-def get_hop(g: Graph, vertex: Vertex):
-    if vertex not in g.vertices:
-        raise Exception("Error vertices not in graph: ", vertex)
-    graph = g.graph
-
-    def cal(v):
-        if v == g.vertices[0]:
-            return 0
-        else:
-            for i in g.vertices:
-                if v in graph[i]:
-                    return 1 + cal(i)
-    return cal(vertex)
-
-
-if __name__ == '__main__':
-    print(parse_config())

@@ -5,7 +5,7 @@ sys.path.append(lib_path)
 import json
 from DS.position import distance
 from DS.vertex import Vertex
-from DS.edge import Edge2
+from DS.edge import Edge
 from utils.init_log import init_log
 
 
@@ -58,7 +58,7 @@ class WsnInput:
             for j in all_vertex:
                 dis = distance(i, j)
                 if dis <= radius and distance(i, j) != 0:
-                    edge = Edge2(i, j)
+                    edge = Edge(i, j)
                     if edge not in dict_ind2edge.values():
                         index = len(dict_ind2edge)
                         dict_ind2edge[index + 1] = edge

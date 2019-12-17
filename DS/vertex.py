@@ -49,5 +49,4 @@ class Vertex(Position):
     #     return '%s (%f %f %f)' % (str(self.name + 1), self.x, self.y, self.z)
 
     def __repr__(self):
-        return '%s' % (str(self.name + 1))
-        
+        return '%s' % (str(self.name))

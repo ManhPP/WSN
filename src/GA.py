@@ -22,8 +22,8 @@ MUTPB = 0.2
 TERMINATE = 30
 
 
-def init_individual(constructor, num_sensors, num_pos):
-    length = 2 * (num_sensors + num_pos + 1)
+def init_individual(constructor, num_edges, num_pos):
+    length = num_edges + num_pos
     # individual = list(np.random.uniform(0, 1, size=(length,)))
     individual = [random.uniform(0, 1) for _ in range(length)]
     g = constructor.gen_graph(individual)
@@ -31,9 +31,8 @@ def init_individual(constructor, num_sensors, num_pos):
     while not g.is_connected:
         individual = [random.uniform(0, 1) for _ in range(length)]
         g = constructor.gen_graph(individual)
-        print(i)
-        old = individual
         i += 1
+        print("init again times: ", i)
     print("====Thanh cong====")
     return creator.Individual(individual)
 
@@ -47,11 +46,11 @@ def run_ga(inp: WsnInput, logger=None):
         raise Exception("Error: logger is None!")
 
     logger.info("Start!")
-    constructor = Constructor(inp.num_of_sensors, inp.num_of_relays, inp.num_of_relay_positions, inp.all_vertex)
+    constructor = Constructor(inp.dict_ind2edge, inp.num_of_sensors, inp.num_of_relays, inp.num_of_relay_positions, inp.all_vertex)
     toolbox = base.Toolbox()
     stats = tools.Statistics(key=lambda ind: ind.fitness.values)
 
-    toolbox.register("individual", init_individual, constructor, inp.num_of_sensors, inp.num_of_relay_positions)
+    toolbox.register("individual", init_individual, constructor, len(inp.dict_ind2edge.keys()), inp.num_of_relay_positions)
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
     toolbox.register("mate", tools.cxUniform, indpb=0.2)
     toolbox.register("mutate", tools.mutGaussian, mu=0, sigma=0.2, indpb=0.2)
@@ -107,12 +106,12 @@ def run_ga(inp: WsnInput, logger=None):
 if __name__ == '__main__':
     for i in range(8,9):
         logger = init_log()
-        path = '/home/manhpp/d/Code/WSN/data/uu-dem' + str(i) + '_r25_1.in'
-        # path = '/home/manhpp/d/Code/WSN/data/test.json'
+        # path = '/home/manhpp/d/Code/WSN/data/uu-dem' + str(i) + '_r25_1.in'
+        path = 'D:\\Code\\WSN\\data\\test.json'
 
         logger.info("prepare input data from path %s" % path)
         inp = WsnInput.from_file(path)
-        inp.max_hop = 20
+        # inp.max_hop = 20
         logger.info("num generation: %s" % N_GENS)
         logger.info("population size: %s" % POP_SIZE)
         logger.info("crossover probability: %s" % CXPB)
