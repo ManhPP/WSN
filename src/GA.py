@@ -1,4 +1,5 @@
 import os, sys
+
 lib_path = os.path.abspath(os.path.join('.'))
 sys.path.append(lib_path)
 
@@ -20,6 +21,7 @@ POP_SIZE = 300
 CXPB = 0.8
 MUTPB = 0.2
 TERMINATE = 30
+RATE_THRESHOLD = 0.5
 
 
 def init_individual(constructor, num_edges, num_pos):
@@ -46,14 +48,17 @@ def run_ga(inp: WsnInput, logger=None):
         raise Exception("Error: logger is None!")
 
     logger.info("Start!")
-    constructor = Constructor(inp.dict_ind2edge, inp.num_of_sensors, inp.num_of_relays, inp.num_of_relay_positions, inp.all_vertex)
+    constructor = Constructor(inp.dict_ind2edge, inp.num_of_sensors, inp.num_of_relays, inp.num_of_relay_positions,
+                              inp.all_vertex)
     toolbox = base.Toolbox()
     stats = tools.Statistics(key=lambda ind: ind.fitness.values)
 
-    toolbox.register("individual", init_individual, constructor, len(inp.dict_ind2edge.keys()), inp.num_of_relay_positions)
+    toolbox.register("individual", init_individual, constructor, len(inp.dict_ind2edge.keys()),
+                     inp.num_of_relay_positions)
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
-    toolbox.register("mate", tools.cxUniform, indpb=0.2)
-    toolbox.register("mutate", tools.mutGaussian, mu=0, sigma=0.2, indpb=0.2)
+    toolbox.register("mate", crossover, num_positions=inp.num_of_relay_positions, rate_threshold=RATE_THRESHOLD,
+                     indpb=0.2)
+    toolbox.register("mutate", tools.mutShuffleIndexes, indpb=0.2)
     toolbox.register("select", tools.selTournament, tournsize=20)
     # toolbox.register("select", tools.selBest, k=3)
     toolbox.register("evaluate", get_fitness, max_hop=inp.max_hop, constructor=constructor)
@@ -103,12 +108,30 @@ def run_ga(inp: WsnInput, logger=None):
     return best_ind
 
 
-if __name__ == '__main__':
-    for i in range(8,9):
-        logger = init_log()
-        # path = '/home/manhpp/d/Code/WSN/data/uu-dem' + str(i) + '_r25_1.in'
-        path = 'D:\\Code\\WSN\\data\\test.json'
+def mutate(gen, num_positions):
+    pass
 
+
+def crossover(ind1, ind2, num_positions, rate_threshold, indpb):
+    rate = random.random()
+    if rate < rate_threshold:
+        for i in range(num_positions):
+            if random.random() < indpb:
+                ind1[i], ind2[i] = ind2[i], ind1[i]
+    else:
+        for i in range(num_positions, len(ind1)):
+            if random.random() < indpb:
+                ind1[i], ind2[i] = ind2[i], ind1[i]
+
+    return ind1, ind2
+
+
+if __name__ == '__main__':
+    for i in range(8, 9):
+        logger = init_log()
+        path = 'D:/Code/WSN/data/uu-dem' + str(i + 1) + '_r25_1.in'
+        path = 'D:\\Code\\WSN\\data\\test.json'
+        #
         logger.info("prepare input data from path %s" % path)
         inp = WsnInput.from_file(path)
         # inp.max_hop = 20
