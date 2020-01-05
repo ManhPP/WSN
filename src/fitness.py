@@ -30,8 +30,8 @@ def get_fitness(genes: list, max_hop: int = 20, constructor=None):
 
     result = 0
     for i in list_send:
-        if i.type_of_vertex == "relay":
-            continue
+        # if i.type_of_vertex == "relay":
+        #     continue
         for j in g.vertices:
             if i in graph[j]:
                 result += params['E_TX'] + params['epsilon_fs'] * i.get_distance(j)**2

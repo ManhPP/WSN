@@ -23,11 +23,13 @@ MUTPB = 0.2
 TERMINATE = 30
 RATE_THRESHOLD = 0.5
 
+c = 0
+
 
 def init_individual(constructor, num_edges, num_pos):
     length = num_edges + num_pos
     # individual = list(np.random.uniform(0, 1, size=(length,)))
-    individual = [random.uniform(0, 1) for _ in range(length)]
+    individual = [random.random() for _ in range(length)]
     g = constructor.gen_graph(individual)
     i = 0
     while not g.is_connected:
@@ -35,7 +37,9 @@ def init_individual(constructor, num_edges, num_pos):
         g = constructor.gen_graph(individual)
         i += 1
         print("init again times: ", i)
-    print("====Thanh cong====")
+    global c
+    c += 1
+    print("====Thanh cong==== : ", c)
     return creator.Individual(individual)
 
 
@@ -56,9 +60,10 @@ def run_ga(inp: WsnInput, logger=None):
     toolbox.register("individual", init_individual, constructor, len(inp.dict_ind2edge.keys()),
                      inp.num_of_relay_positions)
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
-    toolbox.register("mate", crossover, num_positions=inp.num_of_relay_positions, rate_threshold=RATE_THRESHOLD,
-                     indpb=0.2)
-    toolbox.register("mutate", tools.mutShuffleIndexes, indpb=0.2)
+    # toolbox.register("mate", crossover_one_point, num_positions=inp.num_of_relay_positions, rate_threshold=RATE_THRESHOLD,
+    #                  indpb=0.4)
+    toolbox.register("mate", tools.cxTwoPoint)
+    toolbox.register("mutate", tools.mutShuffleIndexes, indpb=0.3)
     toolbox.register("select", tools.selTournament, tournsize=20)
     # toolbox.register("select", tools.selBest, k=3)
     toolbox.register("evaluate", get_fitness, max_hop=inp.max_hop, constructor=constructor)
@@ -112,14 +117,15 @@ def mutate(gen, num_positions):
     pass
 
 
-def crossover(ind1, ind2, num_positions, rate_threshold, indpb):
+def crossover_one_point(ind1, ind2, num_positions, rate_threshold, indpb):
+    size = min(len(ind1), len(ind2))
     rate = random.random()
     if rate < rate_threshold:
         for i in range(num_positions):
             if random.random() < indpb:
                 ind1[i], ind2[i] = ind2[i], ind1[i]
     else:
-        for i in range(num_positions, len(ind1)):
+        for i in range(num_positions, size):
             if random.random() < indpb:
                 ind1[i], ind2[i] = ind2[i], ind1[i]
 
@@ -129,12 +135,12 @@ def crossover(ind1, ind2, num_positions, rate_threshold, indpb):
 if __name__ == '__main__':
     for i in range(8, 9):
         logger = init_log()
-        path = 'D:/Code/WSN/data/uu-dem' + str(i + 1) + '_r25_1.in'
-        path = 'D:\\Code\\WSN\\data\\test.json'
+        path = 'D:\\Code\\WSN\\data\\hop\\ga-dem2_r25_1.json'
+        # path = 'D:\\Code\\WSN\\data\\test.json'
         #
         logger.info("prepare input data from path %s" % path)
         inp = WsnInput.from_file(path)
-        # inp.max_hop = 20
+        inp.max_hop = 6
         logger.info("num generation: %s" % N_GENS)
         logger.info("population size: %s" % POP_SIZE)
         logger.info("crossover probability: %s" % CXPB)
