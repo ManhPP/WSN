@@ -1,12 +1,11 @@
 import os, sys
 
-lib_path = os.path.abspath(os.path.join('.'))
+lib_path = os.path.abspath(os.path.join('..'))
 sys.path.append(lib_path)
 
 import random
 from deap import base, creator, tools, algorithms
 from utils.arg_parser import parse_config
-import numpy as np
 from src.fitness import get_fitness
 from utils.load_input import WsnInput
 from src.constructor import Constructor
