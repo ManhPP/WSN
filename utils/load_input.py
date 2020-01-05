@@ -24,7 +24,7 @@ class WsnInput:
         self.dict_ind2edge = _dict_ind2edge
 
     @classmethod
-    def from_file(cls, path):
+    def rom_file(cls, path):
         f = open(path)
         d = json.load(f)
         return cls.from_dict(d)

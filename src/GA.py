@@ -5,6 +5,7 @@ sys.path.append(lib_path)
 
 import random
 from deap import base, creator, tools, algorithms
+from utils.arg_parser import parse_config
 import numpy as np
 from src.fitness import get_fitness
 from utils.load_input import WsnInput
@@ -47,7 +48,7 @@ def reset_hop(v: Vertex):
     v.reset_hop()
 
 
-def run_ga(inp: WsnInput, logger=None):
+def run_ga(inp: WsnInput, params: dict, logger=None):
     if logger is None:
         raise Exception("Error: logger is None!")
 
@@ -66,7 +67,7 @@ def run_ga(inp: WsnInput, logger=None):
     toolbox.register("mutate", tools.mutShuffleIndexes, indpb=0.3)
     toolbox.register("select", tools.selTournament, tournsize=20)
     # toolbox.register("select", tools.selBest, k=3)
-    toolbox.register("evaluate", get_fitness, max_hop=inp.max_hop, constructor=constructor)
+    toolbox.register("evaluate", get_fitness, params=params, max_hop=inp.max_hop, constructor=constructor)
 
     pop = toolbox.population(POP_SIZE)
     best_ind = toolbox.clone(pop[0])
@@ -135,16 +136,17 @@ def crossover_one_point(ind1, ind2, num_positions, rate_threshold, indpb):
 if __name__ == '__main__':
     for i in range(8, 9):
         logger = init_log()
-        path = 'D:\\Code\\WSN\\data\\hop\\ga-dem2_r25_1.json'
+        # path = 'D:\\Code\\WSN\\data\\hop\\ga-dem2_r25_1.json'
         # path = 'D:\\Code\\WSN\\data\\test.json'
         #
+        params, path = parse_config()
         logger.info("prepare input data from path %s" % path)
         inp = WsnInput.from_file(path)
-        inp.max_hop = 6
+        # inp.max_hop = 6
         logger.info("num generation: %s" % N_GENS)
         logger.info("population size: %s" % POP_SIZE)
         logger.info("crossover probability: %s" % CXPB)
         logger.info("mutation probability: %s" % MUTPB)
         logger.info("info input: %s" % inp.to_dict())
         logger.info("run GA....")
-        run_ga(inp, logger)
+        run_ga(inp, params, logger)

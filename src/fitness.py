@@ -1,10 +1,7 @@
-from DS.graph import Graph
-from DS.vertex import Vertex
-from utils.arg_parser import parse_config
 import itertools
 
 
-def get_fitness(genes: list, max_hop: int = 20, constructor=None):
+def get_fitness(genes: list, params: dict, max_hop: int = 20, constructor=None):
     if constructor is None:
         raise Exception("Error: Must init constructor!")
     g = constructor.gen_graph(genes)
@@ -19,7 +16,7 @@ def get_fitness(genes: list, max_hop: int = 20, constructor=None):
     adjacent = list(set(all_values))
     list_send = []
     list_send_receive = []
-    params, _ = parse_config()
+    # params, _ = parse_config()
 
     for i in vertices:
         if i in adjacent:
