@@ -17,7 +17,7 @@ def prepare(path):
             if i.name > 0 and j.name <= inp.num_of_relay_positions:
                 distance_matrix[i.name, j.name] = 9999
                 continue
-            if distance(i, j) <= inp.radius and distance(i, j) != 0:
+            if distance(i, j) <= 2 * inp.radius and distance(i, j) != 0:
                 distance_matrix[i.name, j.name] = distance(i, j)
                 is_adj_matrix[i.name][j.name] = 1
             else:

@@ -1,23 +1,27 @@
-import os, sys
+import os
+import random
+import sys
+import time
+
+from deap import base, creator, tools, algorithms
+import multiprocessing
+
+from DS.vertex import Vertex
+from src.constructor import Constructor
+from src.fitness import get_fitness
+from utils.arg_parser import parse_config
+from utils.init_log import init_log
+from utils.load_input import WsnInput
 
 lib_path = os.path.abspath(os.path.join('..'))
 sys.path.append(lib_path)
-
-import random
-from deap import base, creator, tools, algorithms
-from utils.arg_parser import parse_config
-from src.fitness import get_fitness
-from utils.load_input import WsnInput
-from src.constructor import Constructor
-from DS.vertex import Vertex
-from utils.init_log import init_log
 
 creator.create("FitnessMin", base.Fitness, weights=(-1.,))
 FitnessMin = creator.FitnessMin
 creator.create("Individual", list, fitness=FitnessMin)
 
 N_GENS = 200
-POP_SIZE = 300
+POP_SIZE = 100
 CXPB = 0.8
 MUTPB = 0.2
 TERMINATE = 30
@@ -28,7 +32,7 @@ c = 0
 
 def init_individual(constructor, num_edges, num_pos):
     length = num_edges + num_pos
-    # individual = list(np.random.uniform(0, 1, size=(length,)))
+    # individual = list(np.ra ndom.uniform(0, 1, size=(length,)))
     individual = [random.random() for _ in range(length)]
     g = constructor.gen_graph(individual)
     i = 0
@@ -52,11 +56,13 @@ def run_ga(inp: WsnInput, params: dict, logger=None):
         raise Exception("Error: logger is None!")
 
     logger.info("Start!")
-    constructor = Constructor(inp.dict_ind2edge, inp.num_of_sensors, inp.num_of_relays, inp.num_of_relay_positions,
+    constructor = Constructor(logger, inp.dict_ind2edge, inp.num_of_sensors, inp.num_of_relays, inp.num_of_relay_positions,
                               inp.all_vertex)
+    pool = multiprocessing.Pool(processes=4)
     toolbox = base.Toolbox()
-    stats = tools.Statistics(key=lambda ind: ind.fitness.values)
 
+    toolbox.register("map", pool.map)
+    stats = tools.Statistics(key=lambda ind: ind.fitness.values)
     toolbox.register("individual", init_individual, constructor, len(inp.dict_ind2edge.keys()),
                      inp.num_of_relay_positions)
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
@@ -68,13 +74,16 @@ def run_ga(inp: WsnInput, params: dict, logger=None):
     # toolbox.register("select", tools.selBest, k=3)
     toolbox.register("evaluate", get_fitness, params=params, max_hop=inp.max_hop, constructor=constructor)
 
+    t = time.time()
     pop = toolbox.population(POP_SIZE)
+    print("Time: ", time.time()-t)
     best_ind = toolbox.clone(pop[0])
     logger.info("init best individual: %s, fitness: %s" % (best_ind, toolbox.evaluate(best_ind)))
     prev = -1  # use for termination
     count_term = 0  # use for termination
 
     for g in range(N_GENS):
+        t = time.time()
         offsprings = map(toolbox.clone, toolbox.select(pop, len(pop) - 1))
         offsprings = algorithms.varAnd(offsprings, toolbox, CXPB, MUTPB)
         min_value = float('inf')
@@ -103,13 +112,17 @@ def run_ga(inp: WsnInput, params: dict, logger=None):
         else:
             count_term = 0
         logger.info("Min value this pop %d : %f " % (g, min_value))
+        logger.info("###Time pop %d: %f" % (g, time.time()-t))
         pop[:] = invalid_ind[:]
         prev = b
         if count_term == TERMINATE:
             break
 
     logger.info("Finished! Best individual: %s, fitness: %s" % (best_ind, min_value))
-    tmp = constructor.gen_graph(best_ind)
+    logger.info("Best fitness: %s" % min_value)
+    # tmp = constructor.gen_graph(best_ind)
+    pool.close()
+
     return best_ind
 
 
@@ -138,6 +151,8 @@ if __name__ == '__main__':
         # path = 'D:\\Code\\WSN\\data\\hop\\ga-dem2_r25_1.json'
         # path = 'D:\\Code\\WSN\\data\\test.json'
         #
+        t = time.time()
+
         params, path = parse_config()
         logger.info("prepare input data from path %s" % path)
         inp = WsnInput.from_file(path)
@@ -149,3 +164,4 @@ if __name__ == '__main__':
         logger.info("info input: %s" % inp.to_dict())
         logger.info("run GA....")
         run_ga(inp, params, logger)
+        logger.info("All time: %f" %(time.time()-t))

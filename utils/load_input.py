@@ -54,8 +54,10 @@ class WsnInput:
         all_vertex = [BS]
         all_vertex.extend(relay_positions)
         all_vertex.extend(sensors)
-        for i in all_vertex:
-            for j in all_vertex:
+        for index_i in range(len(all_vertex)):
+            i = all_vertex[index_i]
+            for index_j in range(index_i+1, len(all_vertex)):
+                j = all_vertex[index_j]
                 dis = distance(i, j)
                 if dis <= 2 * radius and distance(i, j) != 0:
                     edge = Edge(i, j)
