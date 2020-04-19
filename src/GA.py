@@ -21,7 +21,7 @@ FitnessMin = creator.FitnessMin
 creator.create("Individual", list, fitness=FitnessMin)
 
 N_GENS = 200
-POP_SIZE = 100
+POP_SIZE = 300
 CXPB = 0.8
 MUTPB = 0.2
 TERMINATE = 30

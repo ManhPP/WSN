@@ -341,7 +341,8 @@ def solve_by_pulp(inp, is_adj_matrix, distance_matrix, dict_constant):
 if __name__ == '__main__':
     _dict_constant, _data_path = parse_config()
 
-    _inp, _is_adj_matrix, _distance_matrix = prepare(_data_path)
+    # _inp, _is_adj_matrix, _distance_matrix = prepare(_data_path)
+    _inp, _is_adj_matrix, _distance_matrix = prepare("D:\\Code\WSN\\data\\test.json")
     print("load data ok")
     result, connect_matrix = solve_by_or_tools(_inp, _is_adj_matrix, _distance_matrix, _dict_constant)
     # result = solve_by_pulp(_inp, _is_adj_matrix, _distance_matrix, _dict_constant)
