@@ -2,7 +2,7 @@ import os
 import sys
 import time
 
-lib_path = os.path.abspath(os.path.join('.'))
+lib_path = os.path.abspath(os.path.join('..'))
 sys.path.append(lib_path)
 
 import pulp
