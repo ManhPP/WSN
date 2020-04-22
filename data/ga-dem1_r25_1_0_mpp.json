@@ -6,7 +6,7 @@
     "num_of_relay_positions": 20,
     "num_of_relays": 10,
     "num_of_sensors": 20,
-    "relays": [
+    "relay_positions": [
         {
             "x": 124.21237361820275,
             "y": 32.297914079762855,
