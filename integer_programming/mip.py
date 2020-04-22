@@ -37,9 +37,9 @@ def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
     delta = {}
     gamma = {}
     y = {}
-    print(num_all_vertex)
+    print("num all vertex: ", num_all_vertex)
     subs = sub_lists([i for i in range(num_all_vertex)], num_all_vertex)
-    print(len(subs))
+    print("Len subset: ", len(subs))
     a = [0 for _ in range(num_all_vertex)]
     b = [0 for _ in range(num_all_vertex)]
     e = [0 for _ in range(num_all_vertex)]
