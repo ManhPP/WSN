@@ -1,13 +1,13 @@
 import os
 import sys
 
+lib_path = os.path.abspath(os.path.join('..'))
+sys.path.append(lib_path)
+
 from ortools.linear_solver import pywraplp
 from itertools import combinations
 from integer_programming.prepare_data import prepare
 from utils.arg_parser import parse_config
-
-lib_path = os.path.abspath(os.path.join('..'))
-sys.path.append(lib_path)
 
 
 def sub_lists(my_list, n):
