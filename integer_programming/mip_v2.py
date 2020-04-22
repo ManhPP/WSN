@@ -1,13 +1,17 @@
 import os
 import sys
-
-from ortools.linear_solver import pywraplp
-from itertools import combinations
-from integer_programming.prepare_data import prepare
-from utils.arg_parser import parse_config
+import time
 
 lib_path = os.path.abspath(os.path.join('..'))
 sys.path.append(lib_path)
+
+import pulp
+from ortools.linear_solver import pywraplp
+from itertools import combinations
+from pulp import *
+import numpy as np
+from integer_programming.prepare_data import prepare
+from utils.arg_parser import parse_config
 
 
 def sub_lists(my_list, n):
@@ -16,10 +20,11 @@ def sub_lists(my_list, n):
         temp = [list(x) for x in combinations(my_list, i)]
         if len(temp) > 0:
             subs.extend(temp)
-
+    result = []
     for i in subs:
-        if 1 < len(i) <= n:
-            yield i
+        if len(i) > 1 and len(i) <= n:
+            result.append(i)
+    return result
 
 
 def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
@@ -33,6 +38,8 @@ def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
     gamma = {}
     y = {}
     print("num all vertex: ", num_all_vertex)
+    subs = sub_lists([i for i in range(1 + inp.num_of_relay_positions, num_all_vertex)], inp.num_of_sensors)
+    print("Len subset: ", len(subs))
     a = [0 for _ in range(num_all_vertex)]
     b = [0 for _ in range(num_all_vertex)]
     e = [0 for _ in range(num_all_vertex)]
@@ -76,7 +83,7 @@ def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
                == inp.num_of_relays + inp.num_of_sensors)
 
     # r18
-    for sub in sub_lists([i for i in range(1 + inp.num_of_relay_positions, num_all_vertex)], inp.num_of_sensors):
+    for sub in subs:
         sums = []
         for i in range(len(sub) - 1):
             for j in range(i + 1, len(sub)):
