@@ -76,13 +76,13 @@ def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
                == inp.num_of_relays + inp.num_of_sensors)
 
     # r18
-    for sub in sub_lists([i for i in range(1 + inp.num_of_relay_positions, num_all_vertex)], inp.num_of_sensors):
-        sums = []
-        for i in range(len(sub) - 1):
-            for j in range(i + 1, len(sub)):
-                sums.append(connect_matrix[sub[i], sub[j]] + connect_matrix[sub[j], sub[i]])
-        solver.Add(solver.Sum(sums) <= len(sub) - 1)
-        # solver.Add(solver.Sum((connect_matrix[sub[i], sub[j]] + connect_matrix[sub[j], sub[i]]) for j in range(i+1, len(sub)) for i in range(len(sub)-1)) <= len(sub) - 1 )
+    # for sub in sub_lists([i for i in range(1 + inp.num_of_relay_positions, num_all_vertex)], inp.num_of_sensors):
+    #     sums = []
+    #     for i in range(len(sub) - 1):
+    #         for j in range(i + 1, len(sub)):
+    #             sums.append(connect_matrix[sub[i], sub[j]] + connect_matrix[sub[j], sub[i]])
+    #     solver.Add(solver.Sum(sums) <= len(sub) - 1)
+    #     # solver.Add(solver.Sum((connect_matrix[sub[i], sub[j]] + connect_matrix[sub[j], sub[i]]) for j in range(i+1, len(sub)) for i in range(len(sub)-1)) <= len(sub) - 1 )
 
     # r20
     for j in range(num_all_vertex):
@@ -156,6 +156,7 @@ def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
     # r22
     for j in range(1, num_all_vertex):
         solver.Add(solver.Sum(y[i, j, j] for i in range(num_all_vertex)) == e[j])
+        solver.Add(solver.Sum(y[0, i, j] for i in range(1, num_all_vertex)) == e[j])
 
     # r23
     for k in range(1, num_all_vertex):
