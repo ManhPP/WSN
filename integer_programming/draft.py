@@ -1,3 +1,7 @@
+"""
+no sub list, add constraint path in hop
+"""
+
 import os
 import sys
 
@@ -53,11 +57,9 @@ def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
 
     # Objective
     solver.Minimize(
-        solver.Sum(muy[i, j] * (dict_constant['E_TX'] + dict_constant['epsilon_fs'] * distance_matrix[i, j] ** 2)
-                   for i in range(1, num_all_vertex) for j in range(1, num_all_vertex)) +
-        solver.Sum(delta[i, j] * (dict_constant['epsilon_mp'] * distance_matrix[i, j] ** 4)
-                   for i in range(1, num_all_vertex) for j in range(1, num_all_vertex)) +
-        solver.Sum(gamma[i, j] * (dict_constant['E_RX'] + dict_constant['E_DA'])
+        solver.Sum(muy[i, j] * (dict_constant['E_TX'] + dict_constant['epsilon_fs'] * distance_matrix[i, j] ** 2) +
+                   delta[i, j] * (dict_constant['epsilon_mp'] * distance_matrix[i, j] ** 4) +
+                   gamma[i, j] * (dict_constant['E_RX'] + dict_constant['E_DA'])
                    for i in range(1, num_all_vertex) for j in range(1, num_all_vertex))
     )
 
@@ -208,15 +210,15 @@ def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
 if __name__ == '__main__':
     _dict_constant, _data_path = parse_config()
 
-    _inp, _is_adj_matrix, _distance_matrix = prepare(_data_path)
-    # _inp, _is_adj_matrix, _distance_matrix = prepare("./../data/test.json")
+    # _inp, _is_adj_matrix, _distance_matrix = prepare(_data_path)
+    _inp, _is_adj_matrix, _distance_matrix = prepare("./../data/test_small.json")
     print("load data ok")
     result, connect_matrix = solve_by_or_tools(_inp, _is_adj_matrix, _distance_matrix, _dict_constant)
     # result = solve_by_pulp(_inp, _is_adj_matrix, _distance_matrix, _dict_constant)
 
     print("result: ", result)
 
-    subs = sub_lists([i for i in range(14)], len(_inp.all_vertex))
+    subs = sub_lists([i for i in range(7)], len(_inp.all_vertex))
     for sub in subs:
         sum = 0
         for i in range(len(sub) - 1):

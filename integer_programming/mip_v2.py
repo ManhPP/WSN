@@ -1,3 +1,8 @@
+"""
+sub list with only sensor node
+"""
+
+
 import os
 import sys
 import time

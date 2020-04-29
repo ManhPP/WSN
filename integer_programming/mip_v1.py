@@ -1,3 +1,7 @@
+"""
+sub list with all vertex
+"""
+
 import os
 import sys
 import time

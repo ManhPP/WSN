@@ -1,0 +1,46 @@
+{
+    "H": 3,
+    "num_of_relay_positions": 3,
+    "num_of_relays": 2,
+    "num_of_sensors": 3,
+    "relay_positions": [
+        {
+            "x": 1,
+            "y": 1,
+            "z": 1
+        },
+        {
+            "x": 1,
+            "y": 2,
+            "z": 3
+        },
+        {
+            "x": 2,
+            "y": 0,
+            "z": 3
+        }
+    ],
+    "sensors": [
+        {
+            "x": 1,
+            "y": 5,
+            "z": 1
+        },
+        {
+            "x": 2,
+            "y": 4,
+            "z": 2
+        },
+        {
+            "x": 2,
+            "y": 1,
+            "z": 4
+        }
+    ],
+    "center": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+    },
+    "radius": 4
+}
