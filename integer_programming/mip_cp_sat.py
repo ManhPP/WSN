@@ -170,7 +170,7 @@ def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
     # print('Number of constraints =', model.NumConstraints())
     solver = cp_model.CpSolver()
     # cp_model.sat_parameters_pb2
-    solver.parameters.num_search_workers = 8
+    solver.parameters.num_search_workers = 2
     solver.parameters.log_search_progress = True
     print(model.ModelStats())
 
