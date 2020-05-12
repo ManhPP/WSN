@@ -120,7 +120,8 @@ def run_ga(inp: WsnInput, params: dict, logger=None):
 
     logger.info("Finished! Best individual: %s, fitness: %s" % (best_ind, min_value))
     logger.info("Best fitness: %s" % min_value)
-    # tmp = constructor.gen_graph(best_ind)
+    tmp = constructor.gen_graph(best_ind)
+    tmp2 = get_fitness(best_ind, params,inp.max_hop,constructor)
     pool.close()
 
     return best_ind
@@ -149,11 +150,11 @@ if __name__ == '__main__':
     for i in range(8, 9):
         logger = init_log()
         # path = 'D:\\Code\\WSN\\data\\hop\\ga-dem2_r25_1.json'
-        # path = 'D:\\Code\\WSN\\data\\test.json'
+        path = 'D:\\Code\\WSN\\data\\test.json'
         #
         t = time.time()
 
-        params, path = parse_config()
+        params, _ = parse_config()
         logger.info("prepare input data from path %s" % path)
         inp = WsnInput.from_file(path)
         # inp.max_hop = 6

@@ -1,5 +1,5 @@
 """
-sat follow draft.py
+sat follow mip_v3.py
 """
 
 import os
