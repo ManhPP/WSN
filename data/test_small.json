@@ -1,8 +1,12 @@
 {
-    "H": 3,
-    "num_of_relay_positions": 3,
-    "num_of_relays": 2,
-    "num_of_sensors": 3,
+    "W": 200,
+    "H": 6,
+    "depth": 1.0,
+    "height": 10.0,
+    "max_hop": 2,
+    "num_of_relay_positions": 2,
+    "num_of_relays": 1,
+    "num_of_sensors": 2,
     "relay_positions": [
         {
             "x": 1,
@@ -13,19 +17,9 @@
             "x": 1,
             "y": 2,
             "z": 3
-        },
-        {
-            "x": 2,
-            "y": 0,
-            "z": 3
         }
     ],
     "sensors": [
-        {
-            "x": 1,
-            "y": 5,
-            "z": 1
-        },
         {
             "x": 2,
             "y": 4,

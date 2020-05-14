@@ -10,10 +10,14 @@ from utils.init_log import init_log
 
 
 class WsnInput:
-    def __init__(self, _max_hop=20, _num_of_relay_positions=40, _num_of_relays=20, _num_of_sensors=40,
-                 _radius=20., _relays=None, _sensors=None, _all_vertex=None, _bs=None, _dict_ind2edge=None):
+    def __init__(self, _W=500, _H=500, _depth=1., _height=10., _max_hop=20, _num_of_relay_positions=40, _num_of_relays=20, _num_of_sensors=40,
+                 _radius=20., _relay_positions=None, _sensors=None, _all_vertex=None, _bs=None, _dict_ind2edge=None):
+        self.W = _W
+        self.H = _H
+        self.depth = _depth
+        self.height = _height
         self.max_hop = _max_hop
-        self.relays = _relays
+        self.relay_positions = _relay_positions
         self.sensors = _sensors
         self.num_of_relay_positions = _num_of_relay_positions
         self.num_of_relays = _num_of_relays
@@ -31,7 +35,11 @@ class WsnInput:
 
     @classmethod
     def from_dict(cls, d):
-        max_hop = d['H']
+        W = d['W']
+        H = d['H']
+        depth = d['depth']
+        height = d['height']
+        max_hop = d['max_hop']
         num_of_relays = d['num_of_relays']
         num_of_relay_positions = d['num_of_relay_positions']
         num_of_sensors = d['num_of_sensors']
@@ -70,24 +78,26 @@ class WsnInput:
                     if i not in j.adjacent_vertices:
                         j.add_adjacent_vertex(i)
 
-        return cls(max_hop, num_of_relay_positions, num_of_relays, num_of_sensors, radius, relay_positions, sensors, all_vertex, BS, dict_ind2edge)
+        return cls(_W= W, _H= H, _depth= depth, _height= height, _max_hop=max_hop, _num_of_relay_positions = num_of_relay_positions, _num_of_relays= num_of_relays,
+                   _num_of_sensors= num_of_sensors, _radius= radius, _relay_positions= relay_positions,
+                   _sensors= sensors, _all_vertex= all_vertex, _bs= BS, _dict_ind2edge= dict_ind2edge)
 
     def freeze(self):
         self.sensors = tuple(self.sensors)
-        self.relays = tuple(self.relays)
+        self.relay_positions = tuple(self.relay_positions)
 
     def to_dict(self):
         return {
+            'W': self.W, 'H': self.H,
+            'depth': self.depth, 'height': self.height,
             'max_hop': self.max_hop,
             'num_of_relay_positions': self.num_of_relay_positions,
             'num_of_relays': self.num_of_relays,
             'num_of_sensors': self.num_of_sensors,
-            'relays': list(map(lambda x: x.to_dict(), self.relays)),
+            'relay_positions': list(map(lambda x: x.to_dict(), self.relay_positions)),
             'sensors': list(map(lambda x: x.to_dict(), self.sensors)),
-            'all_vertex': list(map(lambda x: x.to_dict(), self.all_vertex)),
             'center': self.BS.to_dict(),
             'radius': self.radius,
-            'edge': self.dict_ind2edge
         }
 
     def reset_all_hop(self):
@@ -106,7 +116,7 @@ class WsnInput:
 
     def __hash__(self):
         return hash((self.max_hop, self.num_of_relay_positions, self.num_of_relays, self.num_of_sensors, self.radius,
-                     tuple(self.relays), tuple(self.sensors)))
+                     tuple(self.relay_positions), tuple(self.sensors)))
 
     def __eq__(self, other):
         return hash(self) == hash(other)

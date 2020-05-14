@@ -1,5 +1,9 @@
 {
-    "H": 3,
+    "W": 200,
+    "H": 6,
+    "depth": 1.0,
+    "height": 10.0,
+    "max_hop": 3,
     "num_of_relay_positions": 5,
     "num_of_relays": 3,
     "num_of_sensors": 8,

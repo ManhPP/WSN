@@ -185,23 +185,55 @@ def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
         print()
         if i == inp.num_of_relay_positions:
             print("---" * 20)
-    print("\n\n")
-    for i in range(num_all_vertex):
-        print(a[i].solution_value(), end='|')
-    print()
-    for i in range(num_all_vertex):
-        print(b[i].solution_value(), end='|')
-    print()
-    for i in range(num_all_vertex):
-        print(e[i].solution_value(), end='|')
 
-    print()
-
-    for k in range(1, num_all_vertex):
+    print("========")
+    for i in range(num_all_vertex):
         for j in range(num_all_vertex):
-            for i in range(num_all_vertex):
-                if y[i, j, k].solution_value() != 0:
-                    print('y[%i, %i, %i]' % (i, j, k), y[i, j, k].solution_value())
+            print(muy[i, j].solution_value(), end='|')
+            if j == inp.num_of_relay_positions:
+                print("|", end='|')
+        print()
+        if i == inp.num_of_relay_positions:
+            print("---" * 20)
+
+    print('*******')
+    for i in range(num_all_vertex):
+        for j in range(num_all_vertex):
+            print(delta[i, j].solution_value(), end='|')
+            if j == inp.num_of_relay_positions:
+                print("|", end='|')
+        print()
+        if i == inp.num_of_relay_positions:
+            print("---" * 20)
+
+    print('*******')
+    for i in range(num_all_vertex):
+        for j in range(num_all_vertex):
+            print(gamma[i, j].solution_value(), end='|')
+            if j == inp.num_of_relay_positions:
+                print("|", end='|')
+        print()
+        if i == inp.num_of_relay_positions:
+            print("---" * 20)
+
+    print("========")
+    # print("\n\n")
+    # for i in range(num_all_vertex):
+    #     print(a[i].solution_value(), end='|')
+    # print()
+    # for i in range(num_all_vertex):
+    #     print(b[i].solution_value(), end='|')
+    # print()
+    # for i in range(num_all_vertex):
+    #     print(e[i].solution_value(), end='|')
+    #
+    # print()
+    #
+    # for k in range(1, num_all_vertex):
+    #     for j in range(num_all_vertex):
+    #         for i in range(num_all_vertex):
+    #             if y[i, j, k].solution_value() != 0:
+    #                 print('y[%i, %i, %i]' % (i, j, k), y[i, j, k].solution_value())
     print('optimal value = ', solver.Objective().Value())
     print()
     print("Time = ", solver.WallTime(), " milliseconds")
@@ -211,8 +243,8 @@ def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
 if __name__ == '__main__':
     _dict_constant, _data_path = parse_config()
 
-    # _inp, _is_adj_matrix, _distance_matrix = prepare(_data_path)
-    _inp, _is_adj_matrix, _distance_matrix = prepare("./../data/test.json")
+    _inp, _is_adj_matrix, _distance_matrix = prepare(_data_path)
+    # _inp, _is_adj_matrix, _distance_matrix = prepare("./../data/test.json")
     print("load data ok")
     result, connect_matrix = solve_by_or_tools(_inp, _is_adj_matrix, _distance_matrix, _dict_constant)
     # result = solve_by_pulp(_inp, _is_adj_matrix, _distance_matrix, _dict_constant)

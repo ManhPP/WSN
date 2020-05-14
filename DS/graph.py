@@ -12,11 +12,14 @@ class Graph:
     @property
     def edges(self):
         edges = []
+        names = []
         for v1 in self.graph:
             for v2 in self.graph[v1]:
                 edge = Edge(v1, v2)
-                if edge not in edges:
+                name = (edge.vertices[0].name, edge.vertices[1].name)
+                if name not in names:
                     edges.append(edge)
+                    names.append(name)
         return edges
 
     @property
