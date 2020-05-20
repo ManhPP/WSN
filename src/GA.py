@@ -3,6 +3,7 @@ import random
 import sys
 import time
 
+import numpy
 from deap import base, creator, tools, algorithms
 import multiprocessing
 
@@ -56,13 +57,23 @@ def run_ga(inp: WsnInput, params: dict, logger=None):
         raise Exception("Error: logger is None!")
 
     logger.info("Start!")
+
+    stats = tools.Statistics(lambda ind: ind.fitness.values[0])
+    stats.register("avg", numpy.mean, axis=0)
+    stats.register("std", numpy.std, axis=0)
+    stats.register("min", numpy.min, axis=0)
+    stats.register("max", numpy.max, axis=0)
+
+    logbook = tools.Logbook()
+    logbook.header = 'gen', "min", "avg", "std", "max"
+
     constructor = Constructor(logger, inp.dict_ind2edge, inp.num_of_sensors, inp.num_of_relays, inp.num_of_relay_positions,
                               inp.all_vertex)
-    pool = multiprocessing.Pool(processes=4)
     toolbox = base.Toolbox()
 
+    pool = multiprocessing.Pool(processes=4)
     toolbox.register("map", pool.map)
-    stats = tools.Statistics(key=lambda ind: ind.fitness.values)
+
     toolbox.register("individual", init_individual, constructor, len(inp.dict_ind2edge.keys()),
                      inp.num_of_relay_positions)
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
@@ -111,20 +122,23 @@ def run_ga(inp: WsnInput, params: dict, logger=None):
             count_term += 1
         else:
             count_term = 0
-        logger.info("Min value this pop %d : %f " % (g, min_value))
-        logger.info("###Time pop %d: %f" % (g, time.time()-t))
+        # logger.info("Min value this pop %d : %f " % (g, min_value))
+        # logger.info("###Time pop %d: %f" % (g, time.time()-t))
         pop[:] = invalid_ind[:]
+        record = stats.compile(pop)
+        logbook.record(gen=g, **record)
+        logger.info(logbook.stream)
         prev = b
         if count_term == TERMINATE:
             break
 
     logger.info("Finished! Best individual: %s, fitness: %s" % (best_ind, min_value))
     logger.info("Best fitness: %s" % min_value)
-    tmp = constructor.gen_graph(best_ind)
-    tmp2 = get_fitness(best_ind, params,inp.max_hop,constructor)
+    # tmp = constructor.gen_graph(best_ind)
+    # tmp2 = get_fitness(best_ind, params,inp.max_hop,constructor)
     pool.close()
 
-    return best_ind
+    return best_ind, logbook
 
 
 def mutate(gen, num_positions):
