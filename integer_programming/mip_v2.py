@@ -66,11 +66,11 @@ def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
     # Objective
     solver.Minimize(
         solver.Sum(muy[i, j] * (dict_constant['E_TX'] + dict_constant['epsilon_fs'] * distance_matrix[i, j] ** 2)
-                   for i in range(1, num_all_vertex) for j in range(1, num_all_vertex)) +
+                   for i in range(num_all_vertex) for j in range(num_all_vertex)) +
         solver.Sum(delta[i, j] * (dict_constant['epsilon_mp'] * distance_matrix[i, j] ** 4)
-                   for i in range(1, num_all_vertex) for j in range(1, num_all_vertex)) +
+                   for i in range(num_all_vertex) for j in range(num_all_vertex)) +
         solver.Sum(gamma[i, j] * (dict_constant['E_RX'] + dict_constant['E_DA'])
-                   for i in range(1, num_all_vertex) for j in range(1, num_all_vertex))
+                   for i in range(num_all_vertex) for j in range(num_all_vertex))
     )
 
     # Constraints

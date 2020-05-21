@@ -35,7 +35,7 @@ class Constructor:
         t1 = (time.time() - st)
         st = time.time()
 
-        dict_edge_values = {i - self.num_positions: genes[i] for i in range(self.num_positions, len(genes))}
+        dict_edge_values = {i - self.num_positions + 1: genes[i] for i in range(self.num_positions, len(genes))}
 
         position_relay_index = list(
             dict(sorted({i + 1: genes[i] for i in range(self.num_positions)}.items(), key=lambda x: x[1])).keys())[
@@ -50,16 +50,16 @@ class Constructor:
 
         t2 = (time.time() - st)
         st = time.time()
-
+        # [1,2,3, 6, 7, 8, 9, 10, 11, 12, 13]
         ignored_position = [i for i in range(1, self.num_positions + 1) if i not in position_relay_index]
-        order = list(dict(sorted(list(dict_edge_values.items())[self.num_positions + 1:], key=lambda x: x[1])).keys())
+        order = list(dict(sorted(list(dict_edge_values.items()), key=lambda x: x[1])).keys())
 
         t3 = (time.time() - st)
         stt = time.time()
-        for i in range(1, len(order) + 1):
+        for i in range(len(order)):
             st = time.time()
 
-            edge = self.dict_ind2edge[i]
+            edge = self.dict_ind2edge[order[i]]
 
             t4 = (time.time() - st)
             st = time.time()
@@ -72,11 +72,25 @@ class Constructor:
             t5 = (time.time() - st)
             st = time.time()
 
-            graph.add_edge(self.dict_ind2edge[i])
+            graph.add_edge(edge)
 
             t6 = (time.time() - st)
 
             if len(graph.edges) == self.num_relays + self.num_sensors:
                 break
         t7 = time.time()-stt
+
+        graph.is_connected
+
+        for v in graph.vertices:
+            for adj in graph.graph[v]:
+                try:
+                    if graph.hop[adj] == 1 + graph.hop[v]:
+                        try:
+                            graph.num_child[v] += 1
+                        except KeyError:
+                            graph.num_child[v] = 1
+                except KeyError:
+                    continue
+
         return graph

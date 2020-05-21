@@ -1,12 +1,14 @@
-def test(c):
-    for i in range(len(c)):
-        c[i] += 2
-    return c
+class A:
+    def __init__(self):
+        self.a = 0
 
 
-a = [1, 2, 3]
+a = []
+for i in range(3):
+    a.append(A())
 
-b = test(a[:])
+b = a[:]
+for i in range(3):
+    b[i].a += 2
 
-print(a)
-print(b)
+print(",,,")

@@ -12,7 +12,7 @@ def get_fitness(genes: list, params: dict, max_hop: int = 20, constructor=None):
         return float('inf')
     graph = g.graph
     for v in graph.keys():
-        if v.hop > max_hop:
+        if g.hop[v] > max_hop:
             return float('inf')
     vertices = g.vertices
     all_values = itertools.chain.from_iterable(graph.values())
@@ -23,7 +23,7 @@ def get_fitness(genes: list, params: dict, max_hop: int = 20, constructor=None):
 
     for i in vertices:
         if i in adjacent:
-            if len(graph[i]) > 1:
+            if len(graph[i]) > 1 and i.type_of_vertex != 'bs':
                 list_send_receive.append(i)
             elif len(graph[i]) == 1:
                 list_send.append(i)
@@ -39,7 +39,7 @@ def get_fitness(genes: list, params: dict, max_hop: int = 20, constructor=None):
     for i in list_send_receive:
         for j in g.vertices:
             if i in graph[j]:
-                result += i.num_child * (params['E_RX'] + params['E_DA']) + params['epsilon_mp'] * i.get_distance(j)**4
+                result += g.num_child[i] * (params['E_RX'] + params['E_DA']) + params['epsilon_mp'] * i.get_distance(j)**4
                 break
     result *= params['l']
     t2 = (time.time() - start_time)/60 - t1

@@ -4,6 +4,8 @@ from DS.edge import Edge
 class Graph:
     def __init__(self):
         self.graph = dict()
+        self.hop = {}
+        self.num_child = {}
 
     @property
     def vertices(self):
@@ -53,7 +55,8 @@ class Graph:
         component.append(i)
         for j in self.graph[i]:
             if j not in visited:
-                j.hop = i.hop + 1
+                self.hop[j] = self.hop[i] + 1
+                # j.hop = i.hop + 1
                 self.DFS(j, visited, component)
 
     def connected_component(self):
@@ -64,7 +67,8 @@ class Graph:
         for i in v:
             if i not in visited:
                 if len(component) == 0:
-                    i.hop = 0
+                    self.hop[i] = 0
+                    # i.hop = 0
                 self.DFS(i, visited, component)
                 result.append(component)
                 component = []

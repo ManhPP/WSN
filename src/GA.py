@@ -58,7 +58,7 @@ def run_ga(inp: WsnInput, params: dict, logger=None):
 
     logger.info("Start!")
 
-    stats = tools.Statistics(lambda ind: ind.fitness.values[0])
+    stats = tools.Statistics(lambda ind: ind.fitness.values)
     stats.register("avg", numpy.mean, axis=0)
     stats.register("std", numpy.std, axis=0)
     stats.register("min", numpy.min, axis=0)
@@ -79,7 +79,7 @@ def run_ga(inp: WsnInput, params: dict, logger=None):
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
     # toolbox.register("mate", crossover_one_point, num_positions=inp.num_of_relay_positions, rate_threshold=RATE_THRESHOLD,
     #                  indpb=0.4)
-    toolbox.register("mate", tools.cxTwoPoint)
+    toolbox.register("mate", tools.cxSimulatedBinary, eta=0.5)
     toolbox.register("mutate", tools.mutShuffleIndexes, indpb=0.3)
     toolbox.register("select", tools.selTournament, tournsize=20)
     # toolbox.register("select", tools.selBest, k=3)
@@ -95,6 +95,9 @@ def run_ga(inp: WsnInput, params: dict, logger=None):
 
     for g in range(N_GENS):
         t = time.time()
+        record = stats.compile(pop)
+        logbook.record(gen=g, **record)
+        logger.info(logbook.stream)
         offsprings = map(toolbox.clone, toolbox.select(pop, len(pop) - 1))
         offsprings = algorithms.varAnd(offsprings, toolbox, CXPB, MUTPB)
         min_value = float('inf')
@@ -125,17 +128,15 @@ def run_ga(inp: WsnInput, params: dict, logger=None):
         # logger.info("Min value this pop %d : %f " % (g, min_value))
         # logger.info("###Time pop %d: %f" % (g, time.time()-t))
         pop[:] = invalid_ind[:]
-        record = stats.compile(pop)
-        logbook.record(gen=g, **record)
-        logger.info(logbook.stream)
+
         prev = b
         if count_term == TERMINATE:
             break
 
     logger.info("Finished! Best individual: %s, fitness: %s" % (best_ind, min_value))
     logger.info("Best fitness: %s" % min_value)
-    # tmp = constructor.gen_graph(best_ind)
-    # tmp2 = get_fitness(best_ind, params,inp.max_hop,constructor)
+    tmp = constructor.gen_graph(best_ind)
+    tmp2 = get_fitness(best_ind, params,inp.max_hop,constructor)
     pool.close()
 
     return best_ind, logbook
