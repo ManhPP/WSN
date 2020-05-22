@@ -23,11 +23,7 @@ def random_choices(seq, num):
     return result
 
 
-def spt(path=None):
-    # if not path:
-    #     _, path = parse_config()
-
-    inp = WsnInput.from_file(path)
+def spt(inp):
     vertices = inp.all_vertex[:]
 
     graph = Graph()
@@ -85,12 +81,7 @@ def spt(path=None):
     return graph, position_relay_indices, list_edge_indices
 
 
-def mst(path=None):
-    # if not path:
-    #     _, path = parse_config()
-
-    inp = WsnInput.from_file(path)
-    vertices = inp.all_vertex[:]
+def mst(inp):
 
     graph = Graph()
 
@@ -161,7 +152,7 @@ if __name__ == '__main__':
                               inp.num_of_relay_positions,
                               inp.all_vertex)
     # g = spt(path=path)
-    g = mst(path=path)
+    g = mst(inp)
     ind = encode(g[1], g[2], inp.num_of_relay_positions, inp.num_of_relays, inp.num_of_sensors, len(inp.dict_ind2edge))
     gr = constructor.gen_graph(ind)
     tmp = deque()

@@ -10,6 +10,7 @@ import multiprocessing
 from DS.vertex import Vertex
 from src.constructor import Constructor
 from src.fitness import get_fitness
+from src.tree import spt, mst, encode
 from utils.arg_parser import parse_config
 from utils.init_log import init_log
 from utils.load_input import WsnInput
@@ -29,7 +30,7 @@ TERMINATE = 30
 RATE_THRESHOLD = 0.5
 
 
-def init_individual(constructor, num_edges, num_pos):
+def random_init_individual(constructor, num_edges, num_pos):
     length = num_edges + num_pos
     individual = [random.random() for _ in range(length)]
     g = constructor.gen_graph(individual)
@@ -39,6 +40,23 @@ def init_individual(constructor, num_edges, num_pos):
         g = constructor.gen_graph(individual)
         i += 1
         print("init again times: ", i)
+    # return creator.Individual(individual)
+    return individual
+
+
+def heuristic_init_individual(inp: WsnInput, constructor, rate_mst, rate_spt):
+    method = random.choices(["rnd", "spt", "mst"], [1 - (rate_mst + rate_spt), rate_spt, rate_mst])[0]
+    if method == "rnd":
+        individual = random_init_individual(constructor, len(inp.dict_ind2edge.keys()), inp.num_of_relay_positions)
+    elif method == 'spt':
+        g = spt(inp)
+        individual = encode(g[1], g[2], inp.num_of_relay_positions, inp.num_of_relays, inp.num_of_sensors,
+                            len(inp.dict_ind2edge))
+    elif method == 'mst':
+        g = mst(inp)
+        individual = encode(g[1], g[2], inp.num_of_relay_positions, inp.num_of_relays, inp.num_of_sensors,
+                            len(inp.dict_ind2edge))
+
     return creator.Individual(individual)
 
 
@@ -57,15 +75,16 @@ def run_ga(inp: WsnInput, params: dict, logger=None):
     logbook = tools.Logbook()
     logbook.header = 'gen', "min", "avg", "std", "max"
 
-    constructor = Constructor(logger, inp.dict_ind2edge, inp.num_of_sensors, inp.num_of_relays, inp.num_of_relay_positions,
+    constructor = Constructor(logger, inp.dict_ind2edge, inp.num_of_sensors, inp.num_of_relays,
+                              inp.num_of_relay_positions,
                               inp.all_vertex)
     toolbox = base.Toolbox()
 
     pool = multiprocessing.Pool(processes=4)
     toolbox.register("map", pool.map)
 
-    toolbox.register("individual", init_individual, constructor, len(inp.dict_ind2edge.keys()),
-                     inp.num_of_relay_positions)
+    toolbox.register("individual", heuristic_init_individual, inp=inp, constructor=constructor,
+                     rate_mst=params['rate_mst'], rate_spt=params['rate_spt'])
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
     # toolbox.register("mate", crossover_one_point, num_positions=inp.num_of_relay_positions, rate_threshold=RATE_THRESHOLD,
     #                  indpb=0.4)
@@ -83,10 +102,6 @@ def run_ga(inp: WsnInput, params: dict, logger=None):
     count_term = 0  # use for termination
 
     for g in range(N_GENS):
-        t = time.time()
-        record = stats.compile(pop)
-        logbook.record(gen=g, **record)
-        logger.info(logbook.stream)
         offsprings = map(toolbox.clone, toolbox.select(pop, len(pop) - 1))
         offsprings = algorithms.varAnd(offsprings, toolbox, CXPB, MUTPB)
         min_value = float('inf')
@@ -113,14 +128,16 @@ def run_ga(inp: WsnInput, params: dict, logger=None):
             count_term = 0
 
         pop[:] = invalid_ind[:]
-
+        record = stats.compile(pop)
+        logbook.record(gen=g+1, **record)
+        logger.info(logbook.stream)
         prev = b
         if count_term == TERMINATE:
             break
 
     logger.info("Finished! Best individual: %s, fitness: %s" % (best_ind, min_value))
     logger.info("Best fitness: %s" % min_value)
-    tmp = constructor.gen_graph(best_ind)
+    # tmp = constructor.gen_graph(best_ind)
     # tmp2 = get_fitness(best_ind, params,inp.max_hop,constructor)
     pool.close()
 
@@ -159,6 +176,7 @@ if __name__ == '__main__':
         logger.info("population size: %s" % POP_SIZE)
         logger.info("crossover probability: %s" % CXPB)
         logger.info("mutation probability: %s" % MUTPB)
+        logger.info("info param: %s" % params)
         logger.info("info input: %s" % inp.to_dict())
         run_ga(inp, params, logger)
-        logger.info("Total time: %f" %(time.time()-t))
+        logger.info("Total time: %f" % (time.time() - t))

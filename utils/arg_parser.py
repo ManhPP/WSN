@@ -26,7 +26,8 @@ def parse_config():
     dict_constant["E_RX"] = parser.getfloat("CONSTANT", "E_RX")
     dict_constant["E_TX"] = parser.getfloat("CONSTANT", "E_TX")
     dict_constant["l"] = parser.getint("CONSTANT", "l")
-
+    dict_constant["rate_mst"] = parser.getfloat("INIT", "rate_mst")
+    dict_constant["rate_spt"] = parser.getfloat("INIT", "rate_spt")
     data_path = f"{config_file_path.parent}/{parser.get('PATH', 'data_path')}"
     return dict_constant, data_path
 
