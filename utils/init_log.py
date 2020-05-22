@@ -8,6 +8,5 @@ def init_log():
 
     logging.config.fileConfig(f"{config_file_path}/logging.conf")
     logger = logging.getLogger(__name__)
-    logger.info("Custom logging started.")
-    logger.info("Complete!")
+    logger.info("Logger started.")
     return logger

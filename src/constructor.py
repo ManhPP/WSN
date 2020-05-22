@@ -64,8 +64,6 @@ class Constructor:
             t4 = (time.time() - st)
             st = time.time()
 
-            # if edge.vertices[0].name in ignored_position or edge.vertices[1].name in ignored_position \
-            #         or edge in graph.edges:
             if edge.vertices[0].name in ignored_position or edge.vertices[1].name in ignored_position:
                 continue
 
@@ -80,7 +78,7 @@ class Constructor:
                 break
         t7 = time.time()-stt
 
-        graph.is_connected
+        _ = graph.is_connected
 
         for v in graph.vertices:
             for adj in graph.graph[v]:

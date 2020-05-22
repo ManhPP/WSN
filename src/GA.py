@@ -28,12 +28,9 @@ MUTPB = 0.2
 TERMINATE = 30
 RATE_THRESHOLD = 0.5
 
-c = 0
-
 
 def init_individual(constructor, num_edges, num_pos):
     length = num_edges + num_pos
-    # individual = list(np.ra ndom.uniform(0, 1, size=(length,)))
     individual = [random.random() for _ in range(length)]
     g = constructor.gen_graph(individual)
     i = 0
@@ -42,21 +39,14 @@ def init_individual(constructor, num_edges, num_pos):
         g = constructor.gen_graph(individual)
         i += 1
         print("init again times: ", i)
-    global c
-    c += 1
-    print("====Thanh cong==== : ", c)
     return creator.Individual(individual)
-
-
-def reset_hop(v: Vertex):
-    v.reset_hop()
 
 
 def run_ga(inp: WsnInput, params: dict, logger=None):
     if logger is None:
         raise Exception("Error: logger is None!")
 
-    logger.info("Start!")
+    logger.info("Start running GA...")
 
     stats = tools.Statistics(lambda ind: ind.fitness.values)
     stats.register("avg", numpy.mean, axis=0)
@@ -85,9 +75,8 @@ def run_ga(inp: WsnInput, params: dict, logger=None):
     # toolbox.register("select", tools.selBest, k=3)
     toolbox.register("evaluate", get_fitness, params=params, max_hop=inp.max_hop, constructor=constructor)
 
-    t = time.time()
     pop = toolbox.population(POP_SIZE)
-    print("Time: ", time.time()-t)
+
     best_ind = toolbox.clone(pop[0])
     logger.info("init best individual: %s, fitness: %s" % (best_ind, toolbox.evaluate(best_ind)))
     prev = -1  # use for termination
@@ -102,18 +91,15 @@ def run_ga(inp: WsnInput, params: dict, logger=None):
         offsprings = algorithms.varAnd(offsprings, toolbox, CXPB, MUTPB)
         min_value = float('inf')
         invalid_ind = []
-        # tmp = [ind for ind in offsprings if not ind.fitness.valid]
         tmp = [ind for ind in offsprings]
         tmp.append(best_ind)
         fitnesses = toolbox.map(toolbox.evaluate, tmp)
-        # fit1 = list(fitnesses)
         for ind, fit in zip(tmp, fitnesses):
             if fit == float('inf'):
                 invalid_ind.append(best_ind)
             else:
                 invalid_ind.append(ind)
         fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
-        # fit2 = list(fitnesses)
         for ind, fit in zip(invalid_ind, fitnesses):
 
             ind.fitness.values = [fit]
@@ -125,8 +111,7 @@ def run_ga(inp: WsnInput, params: dict, logger=None):
             count_term += 1
         else:
             count_term = 0
-        # logger.info("Min value this pop %d : %f " % (g, min_value))
-        # logger.info("###Time pop %d: %f" % (g, time.time()-t))
+
         pop[:] = invalid_ind[:]
 
         prev = b
@@ -136,7 +121,7 @@ def run_ga(inp: WsnInput, params: dict, logger=None):
     logger.info("Finished! Best individual: %s, fitness: %s" % (best_ind, min_value))
     logger.info("Best fitness: %s" % min_value)
     tmp = constructor.gen_graph(best_ind)
-    tmp2 = get_fitness(best_ind, params,inp.max_hop,constructor)
+    # tmp2 = get_fitness(best_ind, params,inp.max_hop,constructor)
     pool.close()
 
     return best_ind, logbook
@@ -164,20 +149,16 @@ def crossover_one_point(ind1, ind2, num_positions, rate_threshold, indpb):
 if __name__ == '__main__':
     for i in range(8, 9):
         logger = init_log()
-        # path = 'D:\\Code\\WSN\\data\\hop\\ga-dem2_r25_1.json'
-        # path = 'D:\\Code\\WSN\\data\\test.json'
-        #
+
         t = time.time()
 
         params, path = parse_config()
-        logger.info("prepare input data from path %s" % path)
+        logger.info("input path: %s" % path)
         inp = WsnInput.from_file(path)
-        # inp.max_hop = 6
         logger.info("num generation: %s" % N_GENS)
         logger.info("population size: %s" % POP_SIZE)
         logger.info("crossover probability: %s" % CXPB)
         logger.info("mutation probability: %s" % MUTPB)
         logger.info("info input: %s" % inp.to_dict())
-        logger.info("run GA....")
         run_ga(inp, params, logger)
-        logger.info("All time: %f" %(time.time()-t))
+        logger.info("Total time: %f" %(time.time()-t))

@@ -1,11 +1,12 @@
 import os
 import sys
-sys.path.append('.')
+sys.path.append(os.path.abspath('.'))
 
 from logzero import logger
 from argparse import ArgumentParser
 from scipy import interpolate
 import numpy as np
+import glob
 
 from scripts.point import Point, SensorNode, RelayNode, distance
 from scripts.dems_input import DemsInput
@@ -97,74 +98,73 @@ if __name__ == '__main__':
     os.makedirs(args.output, exist_ok=True)
 
     radi = list(map(lambda x: int(x), args.radius.split(',')))
-    for inp_ in args.dems:
-        dem = DemsInput.from_file(inp_)
-        dem.scale(args.cols, args.rows, args.csize)
-        dname = os.path.split(inp_)[-1].split('.')[0]
-        for r in radi:
-            for i in range(args.count):
-                fname = '%s%s_r%d_%d.json' % (args.prefix, dname, r, i+1)
-                
-                fpath = os.path.join(args.output, 'layer', fname)
+    for inp__ in args.dems:
+        for inp_ in glob.glob(inp__):
+            dem = DemsInput.from_file(inp_)
+            dem.scale(args.cols, args.rows, args.csize)
+            dname = os.path.split(inp_)[-1].split('.')[0]
+            for r in radi:
+                for i in range(args.count):
+                    fname = '%s%s_r%d_%d.json' % (args.prefix, dname, r, i+1)
 
-                # if os.path.exists(fpath):
-                #     continue
-                logger.info('Generating %s' % fpath)
+                    fpath = os.path.join(args.output, 'layer', fname)
 
-                # generate random bs
-                center_x, center_y = np.random.uniform(args.W/5, args.W - args.W/5), np.random.uniform(args.W/5, args.W - args.W/5)
-                center_z = estimate(center_x, center_y, dem)
-                bs = Point(center_x, center_y, center_z)
+                    # if os.path.exists(fpath):
+                    #     continue
+                    logger.info('Generating %s' % fpath)
 
-                # Generate random relays
-                relays = []
+                    # generate random bs
+                    center_x, center_y = np.random.uniform(args.W/5, args.W - args.W/5), np.random.uniform(args.W/5, args.W - args.W/5)
+                    center_z = estimate(center_x, center_y, dem)
+                    bs = Point(center_x, center_y, center_z)
 
-                for j in range(args.nrp):
-                    rn = None
-                    while True:
-                        rn = point(dem, (0, args.W), (0, args.H), z_off=args.height, cls=RelayNode, distribution=args.distribution)
-                        if distance(rn, bs) <= r:
-                            break
-                    if distance(rn, bs) > r:
-                        logger.warning(f'{r} {distance(rn, bs)}')
-                    relays.append(rn)
+                    # Generate random relays
+                    relays = []
 
-                # Generate random sensors
-                sensors = []
-                for j in range(args.ns):
-                    ok, sn = False, None
-                    while not ok:
-                        sn = point(dem, (0, args.W), (0, args.H), z_off=-args.depth, cls=SensorNode, distribution=args.distribution)
-                        ok = is_covered(sn, bs, relays, r)
-                    sensors.append(sn)
+                    for j in range(args.nrp):
+                        rn = None
+                        while True:
+                            rn = point(dem, (0, args.W), (0, args.H), z_off=args.height, cls=RelayNode, distribution=args.distribution)
+                            if distance(rn, bs) <= r:
+                                break
+                        if distance(rn, bs) > r:
+                            logger.warning(f'{r} {distance(rn, bs)}')
+                        relays.append(rn)
 
-                res = WsnInput(_W=args.W, _H=args.H, _depth=args.depth,
-                                _height=args.height, _num_of_relay_positions=args.nrp, _num_of_relays=args.nr,
-                                _num_of_sensors=args.ns, _max_hop=args.mh, _relay_positions=relays,
-                                _sensors=sensors, _bs=bs, _radius=r)
+                    # Generate random sensors
+                    sensors = []
+                    for j in range(args.ns):
+                        ok, sn = False, None
+                        while not ok:
+                            sn = point(dem, (0, args.W), (0, args.H), z_off=-args.depth, cls=SensorNode, distribution=args.distribution)
+                            ok = is_covered(sn, bs, relays, r)
+                        sensors.append(sn)
 
-                fpath = os.path.join(args.output, 'layer', fname)
-                # res.to_file(fpath)
+                    res = WsnInput(_W=args.W, _H=args.H, _depth=args.depth,
+                                    _height=args.height, _num_of_relay_positions=args.nrp, _num_of_relays=args.nr,
+                                    _num_of_sensors=args.ns, _max_hop=args.mh, _relay_positions=relays,
+                                    _sensors=sensors, _bs=bs, _radius=r)
 
-                fpath = os.path.join(args.output, 'hop', '%s%s_r%d_%d_0.json' % (args.prefix, dname, r, i+1))
-                res.to_file(fpath)
+                    fpath = os.path.join(args.output, 'layer', fname)
+                    # res.to_file(fpath)
 
-                for j in range(args.ns):
-                    ok, sn = False, None
-                    while True:
-                        sn = point(dem, (0, args.W), (0, args.H), z_off=-args.depth, cls=SensorNode, distribution=args.distribution)
-                        if hop_is_covered(sn, bs, relays, sensors, r):
-                            break
-                    sensors.append(sn)
-                
-                res = WsnInput(_W=args.W, _H=args.H, _depth=args.depth,
-                                _height=args.height, _num_of_relay_positions=args.nrp, _num_of_relays=args.nr,
-                                _num_of_sensors=len(sensors), _max_hop=args.mh, _relay_positions=relays,
-                                _sensors=sensors, _bs=bs, _radius=r)
+                    fpath = os.path.join(args.output, 'hop', '%s%s_r%d_%d_0.json' % (args.prefix, dname, r, i+1))
+                    res.to_file(fpath)
 
-                fpath = os.path.join(args.output, 'hop', '%s%s_r%d_%d_40.json' % (args.prefix, dname, r, i+1))
-                # res.to_file(fpath)
-            break
-        break
+                    for j in range(args.ns):
+                        ok, sn = False, None
+                        while True:
+                            sn = point(dem, (0, args.W), (0, args.H), z_off=-args.depth, cls=SensorNode, distribution=args.distribution)
+                            if hop_is_covered(sn, bs, relays, sensors, r):
+                                break
+                        sensors.append(sn)
+
+                    res = WsnInput(_W=args.W, _H=args.H, _depth=args.depth,
+                                    _height=args.height, _num_of_relay_positions=args.nrp, _num_of_relays=args.nr,
+                                    _num_of_sensors=len(sensors), _max_hop=args.mh, _relay_positions=relays,
+                                    _sensors=sensors, _bs=bs, _radius=r)
+
+                    fpath = os.path.join(args.output, 'hop', '%s%s_r%d_%d_40.json' % (args.prefix, dname, r, i+1))
+                    # res.to_file(fpath)
 
     logger.info('Done')

@@ -3,11 +3,9 @@ import time
 
 
 def get_fitness(genes: list, params: dict, max_hop: int = 20, constructor=None):
-    start_time = time.time()
     if constructor is None:
         raise Exception("Error: Must init constructor!")
     g = constructor.gen_graph(genes)
-    t1 = (time.time() - start_time)/60
     if not g.is_connected:
         return float('inf')
     graph = g.graph
@@ -19,7 +17,6 @@ def get_fitness(genes: list, params: dict, max_hop: int = 20, constructor=None):
     adjacent = list(set(all_values))
     list_send = []
     list_send_receive = []
-    # params, _ = parse_config()
 
     for i in vertices:
         if i in adjacent:
@@ -30,8 +27,6 @@ def get_fitness(genes: list, params: dict, max_hop: int = 20, constructor=None):
 
     result = 0
     for i in list_send:
-        # if i.type_of_vertex == "relay":
-        #     continue
         for j in g.vertices:
             if i in graph[j]:
                 result += params['E_TX'] + params['epsilon_fs'] * i.get_distance(j)**2
@@ -42,8 +37,6 @@ def get_fitness(genes: list, params: dict, max_hop: int = 20, constructor=None):
                 result += g.num_child[i] * (params['E_RX'] + params['E_DA']) + params['epsilon_mp'] * i.get_distance(j)**4
                 break
     result *= params['l']
-    t2 = (time.time() - start_time)/60 - t1
-    t = (time.time() - start_time)/60
     return result
 
 
