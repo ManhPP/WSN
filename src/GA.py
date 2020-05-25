@@ -1,3 +1,4 @@
+import glob
 import os
 import random
 import sys
@@ -164,12 +165,13 @@ def crossover_one_point(ind1, ind2, num_positions, rate_threshold, indpb):
 
 
 if __name__ == '__main__':
-    for i in range(8, 9):
+    params, _data_path = parse_config()
+
+    for path in glob.glob(_data_path):
         logger = init_log()
 
         t = time.time()
 
-        params, path = parse_config()
         logger.info("input path: %s" % path)
         inp = WsnInput.from_file(path)
         logger.info("num generation: %s" % N_GENS)

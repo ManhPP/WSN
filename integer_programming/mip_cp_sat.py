@@ -13,6 +13,8 @@ from itertools import combinations
 from integer_programming.prepare_data import prepare
 from utils.arg_parser import parse_config
 
+coef = 1000000000000.0
+
 
 def sub_lists(my_list, n):
     subs = []
@@ -55,15 +57,15 @@ def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
 
     # Objective
     obj_func = []
-    for i in range(1, num_all_vertex):
-        for j in range(1, num_all_vertex):
+    for i in range(num_all_vertex):
+        for j in range(num_all_vertex):
             obj_func.append(muy[i, j] * int(
-                1000.0 * (dict_constant['E_TX'] + dict_constant['epsilon_fs'] * distance_matrix[i, j] ** 2)))
-            obj_func.append(delta[i, j] * int(1000.0 * dict_constant['epsilon_mp'] * distance_matrix[i, j] ** 4))
-            obj_func.append(gamma[i, j] * int(1000.0 * (dict_constant['E_RX'] + dict_constant['E_DA'])))
+                coef * (dict_constant['E_TX'] + dict_constant['epsilon_fs'] * distance_matrix[i, j] ** 2)))
+            obj_func.append(delta[i, j] * int(coef * dict_constant['epsilon_mp'] * distance_matrix[i, j] ** 4))
+            obj_func.append(gamma[i, j] * int(coef * (dict_constant['E_RX'] + dict_constant['E_DA'])))
 
     model.Minimize(sum(obj_func))
-    model.Proto().objective.scaling_factor = 1.0/1000.0
+    model.Proto().objective.scaling_factor = 1.0/coef
     # model.Minimize(
     #     sum(muy[i, j] * int(1e4 * (dict_constant['E_TX'] + dict_constant['epsilon_fs'] * distance_matrix[i, j] ** 2)) +
     #         delta[i, j] * int(1e4 * dict_constant['epsilon_mp'] * distance_matrix[i, j] ** 4) +
@@ -184,7 +186,7 @@ def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
     print('  - branches  : %i' % solver.NumBranches())
     print('  - wall time : %f s' % solver.WallTime())
     print()
-    return dict_constant["l"] * solver.ObjectiveValue() / 10000.0
+    return dict_constant["l"] * solver.ObjectiveValue()
 
 
 if __name__ == '__main__':

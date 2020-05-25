@@ -1,9 +1,11 @@
 """
 no sub list, add constraint path in hop
 """
-
+import glob
 import os
 import sys
+
+from utils.init_log import init_log
 
 lib_path = os.path.abspath(os.path.join('..'))
 sys.path.append(lib_path)
@@ -216,10 +218,10 @@ def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
 
 if __name__ == '__main__':
     _dict_constant, _data_path = parse_config()
-
-    _inp, _is_adj_matrix, _distance_matrix = prepare(_data_path)
-    # _inp, _is_adj_matrix, _distance_matrix = prepare("./../data/test.json")
-    print("load data ok")
-    result, connect_matrix = solve_by_or_tools(_inp, _is_adj_matrix, _distance_matrix, _dict_constant)
-
-    print("result: ", result)
+    for path in glob.glob(_data_path):
+        logger = init_log()
+        logger.info("input path %s: ", path)
+        _inp, _is_adj_matrix, _distance_matrix = prepare(path)
+        result, connect_matrix = solve_by_or_tools(_inp, _is_adj_matrix, _distance_matrix, _dict_constant)
+        logger.info("Connected Matrix: \n%s", connect_matrix)
+        logger.info("Result: %s", result)
