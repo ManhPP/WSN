@@ -29,6 +29,7 @@ CXPB = 0.8
 MUTPB = 0.2
 TERMINATE = 30
 RATE_THRESHOLD = 0.5
+NUM_GA_RUN = 10
 
 
 def random_init_individual(constructor, num_edges, num_pos):
@@ -68,13 +69,10 @@ def run_ga(inp: WsnInput, params: dict, logger=None):
     logger.info("Start running GA...")
 
     stats = tools.Statistics(lambda ind: ind.fitness.values)
-    stats.register("avg", numpy.mean, axis=0)
-    stats.register("std", numpy.std, axis=0)
-    stats.register("min", numpy.min, axis=0)
-    stats.register("max", numpy.max, axis=0)
+    stats.register("best", numpy.min, axis=0)
 
     logbook = tools.Logbook()
-    logbook.header = 'gen', "min", "avg", "std", "max"
+    logbook.header = 'ga', "best"
 
     constructor = Constructor(logger, inp.dict_ind2edge, inp.num_of_sensors, inp.num_of_relays,
                               inp.num_of_relay_positions,
@@ -89,57 +87,64 @@ def run_ga(inp: WsnInput, params: dict, logger=None):
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
     # toolbox.register("mate", crossover_one_point, num_positions=inp.num_of_relay_positions, rate_threshold=RATE_THRESHOLD,
     #                  indpb=0.4)
-    toolbox.register("mate", tools.cxSimulatedBinary, eta=0.5)
+    toolbox.register("mate", tools.cxTwoPoint)
     toolbox.register("mutate", tools.mutShuffleIndexes, indpb=0.3)
     toolbox.register("select", tools.selTournament, tournsize=20)
     # toolbox.register("select", tools.selBest, k=3)
     toolbox.register("evaluate", get_fitness, params=params, max_hop=inp.max_hop, constructor=constructor)
+    result = []
+    for g in range(NUM_GA_RUN):
+        pop = toolbox.population(POP_SIZE)
 
-    pop = toolbox.population(POP_SIZE)
+        best_ind = toolbox.clone(pop[0])
+        # logger.info("init best individual: %s, fitness: %s" % (best_ind, toolbox.evaluate(best_ind)))
+        prev = -1  # use for termination
+        count_term = 0  # use for termination
 
-    best_ind = toolbox.clone(pop[0])
-    logger.info("init best individual: %s, fitness: %s" % (best_ind, toolbox.evaluate(best_ind)))
-    prev = -1  # use for termination
-    count_term = 0  # use for termination
+        for gen in range(N_GENS):
+            offsprings = map(toolbox.clone, toolbox.select(pop, len(pop) - 1))
+            offsprings = algorithms.varAnd(offsprings, toolbox, CXPB, MUTPB)
+            min_value = float('inf')
+            invalid_ind = []
+            tmp = [ind for ind in offsprings]
+            tmp.append(best_ind)
+            fitnesses = toolbox.map(toolbox.evaluate, tmp)
+            for ind, fit in zip(tmp, fitnesses):
+                if fit == float('inf'):
+                    invalid_ind.append(best_ind)
+                else:
+                    invalid_ind.append(ind)
+            fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
+            for ind, fit in zip(invalid_ind, fitnesses):
 
-    for g in range(N_GENS):
-        offsprings = map(toolbox.clone, toolbox.select(pop, len(pop) - 1))
-        offsprings = algorithms.varAnd(offsprings, toolbox, CXPB, MUTPB)
-        min_value = float('inf')
-        invalid_ind = []
-        tmp = [ind for ind in offsprings]
-        tmp.append(best_ind)
-        fitnesses = toolbox.map(toolbox.evaluate, tmp)
-        for ind, fit in zip(tmp, fitnesses):
-            if fit == float('inf'):
-                invalid_ind.append(best_ind)
+                ind.fitness.values = [fit]
+                if min_value > fit:
+                    min_value = fit
+                    best_ind = toolbox.clone(ind)
+            b = round(min_value, 6)
+            if prev == b:
+                count_term += 1
             else:
-                invalid_ind.append(ind)
-        fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
-        for ind, fit in zip(invalid_ind, fitnesses):
+                count_term = 0
 
-            ind.fitness.values = [fit]
-            if min_value > fit:
-                min_value = fit
-                best_ind = toolbox.clone(ind)
-        b = round(min_value, 6)
-        if prev == b:
-            count_term += 1
-        else:
-            count_term = 0
+            pop[:] = invalid_ind[:]
 
-        pop[:] = invalid_ind[:]
+            prev = b
+            if count_term == TERMINATE:
+                break
         record = stats.compile(pop)
-        logbook.record(gen=g+1, **record)
+        logbook.record(ga=g + 1, **record)
         logger.info(logbook.stream)
-        prev = b
-        if count_term == TERMINATE:
-            break
-
-    logger.info("Finished! Best individual: %s, fitness: %s" % (best_ind, min_value))
-    logger.info("Best fitness: %s" % min_value)
+        result.append(min_value)
+        # logger.info("Finished! Best individual: %s, fitness: %s" % (best_ind, min_value))
+        # logger.info("Best fitness: %s" % min_value)
     # tmp = constructor.gen_graph(best_ind)
     # tmp2 = get_fitness(best_ind, params,inp.max_hop,constructor)
+    avg = numpy.mean(result)
+    std = numpy.std(result)
+    mi = numpy.min(result)
+    ma = numpy.max(result)
+    logger.info([mi, ma, avg, std])
     pool.close()
 
     return best_ind, logbook
