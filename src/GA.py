@@ -136,6 +136,7 @@ def run_ga(inp: WsnInput, params: dict, logger=None):
         logbook.record(ga=g + 1, **record)
         logger.info(logbook.stream)
         result.append(min_value)
+        # print(min_value)
         # logger.info("Finished! Best individual: %s, fitness: %s" % (best_ind, min_value))
         # logger.info("Best fitness: %s" % min_value)
     # tmp = constructor.gen_graph(best_ind)
