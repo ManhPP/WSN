@@ -212,7 +212,7 @@ def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
 
     print('optimal value = ', solver.Objective().Value())
     print()
-    print("Time = ", solver.WallTime(), " milliseconds")
+    # print("Time = ", solver.WallTime(), " milliseconds")
     return dict_constant["l"] * solver.Objective().Value(), connect_matrix_result
 
 

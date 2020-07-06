@@ -6,6 +6,7 @@ class Graph:
         self.graph = dict()
         self.hop = {}
         self.num_child = {}
+        self.subsets = []
 
     @property
     def vertices(self):
@@ -46,9 +47,9 @@ class Graph:
         else:
             self.graph[v2] = [v1]
 
-        if self.is_cyclic2():
-            self.graph[v1].remove(v2)
-            self.graph[v2].remove(v1)
+        # if self.is_cyclic2():
+        #     self.graph[v1].remove(v2)
+        #     self.graph[v2].remove(v1)
 
     def DFS(self, i, visited, component):
         visited.append(i)
@@ -76,30 +77,21 @@ class Graph:
 
     def is_cyclic_util2(self, v, visited, parent):
         graph = self.graph
-        # Mark the current node as visited
         visited.append(v)
 
-        # Recur for all the vertices adjacent to this vertex
         for i in graph[v]:
-            # If the node is not visited then recurse on it
             if i not in visited:
                 if self.is_cyclic_util2(i, visited, v):
                     return True
-            # If an adjacent vertex is visited and not parent of current vertex,
-            # then there is a cycle
             elif parent != i:
                 return True
 
         return False
 
-    # Returns true if the graph contains a cycle, else false.
     def is_cyclic2(self):
-        # Mark all the vertices as not visited 
         visited = []
-        # Call the recursive helper function to detect cycle in different 
-        # DFS trees
         for i in self.graph.keys():
-            if i not in visited:  # Don't recur for u if it is already visited
+            if i not in visited:
                 if self.is_cyclic_util2(i, visited, -1) is True:
                     return True
 
