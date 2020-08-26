@@ -109,11 +109,14 @@ def run_ga(inp: WsnInput, params: dict, logger=None):
             tmp = [ind for ind in offsprings]
             tmp.append(best_ind)
             fitnesses = toolbox.map(toolbox.evaluate, tmp)
+            num_prev_gen_ind = 0
             for ind, fit in zip(tmp, fitnesses):
                 if fit == float('inf'):
-                    invalid_ind.append(best_ind)
+                    num_prev_gen_ind += 1
+                    # invalid_ind.append(best_ind)
                 else:
                     invalid_ind.append(ind)
+            invalid_ind.extend(random.sample(pop, k=num_prev_gen_ind))
             fitnesses = toolbox.map(toolbox.evaluate, invalid_ind)
             for ind, fit in zip(invalid_ind, fitnesses):
 

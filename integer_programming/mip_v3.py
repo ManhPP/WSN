@@ -60,7 +60,7 @@ def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
     # Objective
     solver.Minimize(
         solver.Sum(muy[i, j] * (dict_constant['E_TX'] + dict_constant['epsilon_fs'] * distance_matrix[i, j] ** 2)
-                   + delta[i, j] * (dict_constant['epsilon_mp'] * distance_matrix[i, j] ** 4)
+                   + delta[i, j] * (dict_constant['epsilon_fs'] * distance_matrix[i, j] ** 2)
                    + gamma[i, j] * (dict_constant['E_RX'] + dict_constant['E_DA'])
                    for i in range(num_all_vertex) for j in range(num_all_vertex))
     )
@@ -212,7 +212,7 @@ def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
 
     print('optimal value = ', solver.Objective().Value())
     print()
-    # print("Time = ", solver.WallTime(), " milliseconds")
+    print("Time = ", solver.WallTime(), " milliseconds")
     return dict_constant["l"] * solver.Objective().Value(), connect_matrix_result
 
 
