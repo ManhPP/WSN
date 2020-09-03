@@ -5,8 +5,6 @@ import glob
 import os
 import sys
 
-from utils.init_log import init_log
-
 lib_path = os.path.abspath(os.path.join('..'))
 sys.path.append(lib_path)
 
@@ -14,6 +12,7 @@ from ortools.linear_solver import pywraplp
 from itertools import combinations
 from integer_programming.prepare_data import prepare
 from utils.arg_parser import parse_config
+from utils.init_log import init_log
 
 
 def sub_lists(my_list, n):
@@ -213,17 +212,19 @@ def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
     print('optimal value = ', solver.Objective().Value())
     print()
     print("Time = ", solver.WallTime(), " milliseconds")
-    return dict_constant["l"] * solver.Objective().Value(), connect_matrix_result
+    return dict_constant["l"] * solver.Objective().Value(), connect_matrix_result, solver.WallTime()
 
 
 if __name__ == '__main__':
     _dict_constant, _data_path = parse_config()
     logger = init_log()
     paths = glob.glob(_data_path)
+    print(paths)
     # paths.reverse()
     for path in paths:
         logger.info("input path %s: ", path)
         _inp, _is_adj_matrix, _distance_matrix = prepare(path)
-        result, connect_matrix = solve_by_or_tools(_inp, _is_adj_matrix, _distance_matrix, _dict_constant)
+        result, connect_matrix, t = solve_by_or_tools(_inp, _is_adj_matrix, _distance_matrix, _dict_constant)
         # logger.info("Connected Matrix: \n%s", connect_matrix)
         logger.info("Result: %s", result)
+        logger.info("Time: %s", t)
