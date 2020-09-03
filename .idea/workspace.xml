@@ -20,16 +20,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2bf88837-6ccf-436e-a608-17ac727b7cc5" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/other.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/WSN.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/WSN.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/integer_programming/mip_v3.py" beforeDir="false" afterPath="$PROJECT_DIR$/integer_programming/mip_v3.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GA.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/GA.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/fitness.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/fitness.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/arg_parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/arg_parser.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/config.ini" beforeDir="false" afterPath="$PROJECT_DIR$/utils/config.ini" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/init_log.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/init_log.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -261,6 +252,8 @@
       <workItem from="1571934636361" duration="570000" />
       <workItem from="1598328512392" duration="1659000" />
       <workItem from="1598371596854" duration="2449000" />
+      <workItem from="1598453196735" duration="415000" />
+      <workItem from="1598842714377" duration="2042000" />
     </task>
     <servers />
   </component>
