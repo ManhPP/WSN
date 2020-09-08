@@ -175,10 +175,9 @@ def crossover_one_point(ind1, ind2, num_positions, rate_threshold, indpb):
 
 if __name__ == '__main__':
     params, _data_path = parse_config()
+    logger = init_log()
 
     for path in glob.glob(_data_path):
-        logger = init_log()
-
         t = time.time()
 
         logger.info("input path: %s" % path)
