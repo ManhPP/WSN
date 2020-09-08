@@ -8,16 +8,16 @@ import numpy
 from deap import base, creator, tools, algorithms
 import multiprocessing
 
-from DS.vertex import Vertex
-from src.constructor import Constructor
-from src.fitness import get_fitness
-from src.tree import spt, mst, encode
+lib_path = os.path.abspath(os.path.join('..'))
+sys.path.append(lib_path)
+
+from constructor import Constructor
+from fitness import get_fitness
+from tree import spt, mst, encode
 from utils.arg_parser import parse_config
 from utils.init_log import init_log
 from utils.load_input import WsnInput
 
-lib_path = os.path.abspath(os.path.join('..'))
-sys.path.append(lib_path)
 
 creator.create("FitnessMin", base.Fitness, weights=(-1.,))
 FitnessMin = creator.FitnessMin
@@ -183,11 +183,11 @@ if __name__ == '__main__':
 
         logger.info("input path: %s" % path)
         inp = WsnInput.from_file(path)
-        logger.info("num generation: %s" % N_GENS)
-        logger.info("population size: %s" % POP_SIZE)
-        logger.info("crossover probability: %s" % CXPB)
-        logger.info("mutation probability: %s" % MUTPB)
-        logger.info("info param: %s" % params)
-        logger.info("info input: %s" % inp.to_dict())
+        # logger.info("num generation: %s" % N_GENS)
+        # logger.info("population size: %s" % POP_SIZE)
+        # logger.info("crossover probability: %s" % CXPB)
+        # logger.info("mutation probability: %s" % MUTPB)
+        # logger.info("info param: %s" % params)
+        # logger.info("info input: %s" % inp.to_dict())
         run_ga(inp, params, logger)
         logger.info("Total time: %f" % (time.time() - t))

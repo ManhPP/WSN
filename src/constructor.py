@@ -3,12 +3,16 @@ import sys
 import time
 from copy import deepcopy
 
+lib_path = os.path.abspath(os.path.join('..'))
+sys.path.append(lib_path)
+lib_path = os.path.abspath(os.path.join('.'))
+sys.path.append(lib_path)
+
 from DS.graph import Graph
 from DS.vertex import Vertex
 from utils.load_input import WsnInput
 
-lib_path = os.path.abspath(os.path.join('.'))
-sys.path.append(lib_path)
+
 
 
 class Constructor:

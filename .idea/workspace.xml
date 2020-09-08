@@ -20,7 +20,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2bf88837-6ccf-436e-a608-17ac727b7cc5" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/integer_programming/mip_v3.py" beforeDir="false" afterPath="$PROJECT_DIR$/integer_programming/mip_v3.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GA.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/GA.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -254,6 +255,7 @@
       <workItem from="1598371596854" duration="2449000" />
       <workItem from="1598453196735" duration="415000" />
       <workItem from="1598842714377" duration="2042000" />
+      <workItem from="1599100441660" duration="338000" />
     </task>
     <servers />
   </component>
