@@ -60,12 +60,12 @@ def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
     for i in range(num_all_vertex):
         for j in range(num_all_vertex):
             obj_func.append(muy[i, j] * int(
-                coef * (dict_constant['E_TX'] + dict_constant['epsilon_fs'] * distance_matrix[i, j] ** 2)))
-            obj_func.append(delta[i, j] * int(coef * dict_constant['epsilon_mp'] * distance_matrix[i, j] ** 4))
-            obj_func.append(gamma[i, j] * int(coef * (dict_constant['E_RX'] + dict_constant['E_DA'])))
+                (dict_constant['E_TX'] + dict_constant['epsilon_fs'] * distance_matrix[i, j] ** 2)))
+            obj_func.append(delta[i, j] * int(dict_constant['epsilon_fs'] * distance_matrix[i, j] ** 2))
+            obj_func.append(gamma[i, j] * int((dict_constant['E_RX'] + dict_constant['E_DA'])))
 
     model.Minimize(sum(obj_func))
-    model.Proto().objective.scaling_factor = 1.0/coef
+    model.Proto().objective.scaling_factor = 1.0
     # model.Minimize(
     #     sum(muy[i, j] * int(1e4 * (dict_constant['E_TX'] + dict_constant['epsilon_fs'] * distance_matrix[i, j] ** 2)) +
     #         delta[i, j] * int(1e4 * dict_constant['epsilon_mp'] * distance_matrix[i, j] ** 4) +
@@ -75,21 +75,21 @@ def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
 
     # Constraints
 
-    # r16
+    # r32
     model.Add(sum(connect_matrix[0, j] for j in range(inp.num_of_relay_positions + 1)) <= inp.num_of_relays)
 
     # rang buoc tinh lien thong va chu trinh cua cay
 
-    # r17
+    # r33
     model.Add(sum(connect_matrix[i, j] for i in range(num_all_vertex) for j in range(num_all_vertex))
-              == inp.num_of_relays + inp.num_of_sensors)
+              == sum(connect_matrix[0, j] for j in range(inp.num_of_relay_positions + 1)) + inp.num_of_sensors)
 
-    # r20
+    # r35
     for j in range(num_all_vertex):
         for i in range(num_all_vertex):
             model.Add(connect_matrix[i, j] <= is_adj_matrix[i][j])
 
-    for i in range(1, num_all_vertex):
+    for i in range(num_all_vertex):
         # r3
         model.Add(inp.num_of_sensors * b[i] >= sum(connect_matrix[i, j] for j in range(num_all_vertex)))
         # r4
