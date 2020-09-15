@@ -10,7 +10,7 @@ sys.path.append(lib_path)
 
 from ortools.sat.python import cp_model
 from itertools import combinations
-from integer_programming.prepare_data import prepare
+from prepare_data import prepare
 from utils.arg_parser import parse_config
 
 coef = 1000000000000.0
