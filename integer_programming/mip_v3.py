@@ -10,7 +10,7 @@ sys.path.append(lib_path)
 
 from ortools.linear_solver import pywraplp
 from itertools import combinations
-from integer_programming.prepare_data import prepare
+from prepare_data import prepare
 from utils.arg_parser import parse_config
 from utils.init_log import init_log
 
