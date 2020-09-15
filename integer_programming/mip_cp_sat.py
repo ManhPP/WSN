@@ -15,22 +15,8 @@ from prepare_data import prepare
 from utils.arg_parser import parse_config
 from utils.init_log import init_log
 
-coef = 1000000000000.0
 
-
-def sub_lists(my_list, n):
-    subs = []
-    for i in range(0, len(my_list) + 1):
-        temp = [list(x) for x in combinations(my_list, i)]
-        if len(temp) > 0:
-            subs.extend(temp)
-
-    for i in subs:
-        if 1 < len(i) <= n:
-            yield i
-
-
-def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
+def solve_by_or_tools(logger, inp, is_adj_matrix, distance_matrix, dict_constant):
     model = cp_model.CpModel()
     num_all_vertex = len(inp.all_vertex)
     connect_matrix = {}
@@ -179,14 +165,14 @@ def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
     print(model.ModelStats())
 
     result_status = solver.Solve(model)
-    print('Solve status: %s' % solver.StatusName(result_status))
+    logger.info('Solve status: %s' % solver.StatusName(result_status))
     if result_status == cp_model.OPTIMAL:
-        print('optimal value = ', solver.ObjectiveValue())
+        logger.info('optimal value = ', solver.ObjectiveValue())
 
-    print('Statistics')
-    print('  - conflicts : %i' % solver.NumConflicts())
-    print('  - branches  : %i' % solver.NumBranches())
-    print('  - wall time : %f s' % solver.WallTime())
+    logger.info('Statistics')
+    logger.info('  - conflicts : %i' % solver.NumConflicts())
+    logger.info('  - branches  : %i' % solver.NumBranches())
+    logger.info('  - wall time : %f s' % solver.WallTime())
     print()
     return dict_constant["l"] * solver.ObjectiveValue()
 
@@ -203,3 +189,9 @@ if __name__ == '__main__':
     # result = solve_by_pulp(_inp, _is_adj_matrix, _distance_matrix, _dict_constant)
 
     # print("result: ", result)
+    for path in paths:
+        logger.info("input path %s: ", path)
+        _inp, _is_adj_matrix, _distance_matrix = prepare(path)
+
+        result = solve_by_or_tools(logger, _inp, _is_adj_matrix, _distance_matrix, _dict_constant)
+        logger.info("Result: %s", result)
