@@ -2,6 +2,7 @@
 sat follow mip_v3.py
 """
 
+import glob
 import os
 import sys
 
@@ -12,6 +13,7 @@ from ortools.sat.python import cp_model
 from itertools import combinations
 from prepare_data import prepare
 from utils.arg_parser import parse_config
+from utils.init_log import init_log
 
 coef = 1000000000000.0
 
@@ -192,10 +194,12 @@ def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
 if __name__ == '__main__':
     _dict_constant, _data_path = parse_config()
 
+    logger = init_log()
+    paths = glob.glob(_data_path)
     # _inp, _is_adj_matrix, _distance_matrix = prepare(_data_path)
-    _inp, _is_adj_matrix, _distance_matrix = prepare("./data/new_hop/ga-dem1_r25_1_0.json")
-    print("load data ok")
-    result = solve_by_or_tools(_inp, _is_adj_matrix, _distance_matrix, _dict_constant)
+    # _inp, _is_adj_matrix, _distance_matrix = prepare("./data/new_hop/ga-dem1_r25_1_0.json")
+    # print("load data ok")
+    # result = solve_by_or_tools(_inp, _is_adj_matrix, _distance_matrix, _dict_constant)
     # result = solve_by_pulp(_inp, _is_adj_matrix, _distance_matrix, _dict_constant)
 
-    print("result: ", result)
+    # print("result: ", result)
