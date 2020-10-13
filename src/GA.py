@@ -183,6 +183,7 @@ if __name__ == '__main__':
 
         logger.info("input path: %s" % path)
         inp = WsnInput.from_file(path)
+        inp.radius = 50
         # logger.info("num generation: %s" % N_GENS)
         # logger.info("population size: %s" % POP_SIZE)
         # logger.info("crossover probability: %s" % CXPB)
