@@ -64,7 +64,7 @@ def solve_by_or_tools(logger, inp, is_adj_matrix, distance_matrix, dict_constant
     # Constraints
 
     # r32
-    model.Add(sum(connect_matrix[0, j] for j in range(inp.num_of_relay_positions + 1)) <= inp.num_of_relays)
+    model.Add(sum(connect_matrix[0, j] for j in range(inp.num_of_relay_positions + 1)) == inp.num_of_relays)
 
     # rang buoc tinh lien thong va chu trinh cua cay
 
@@ -162,17 +162,19 @@ def solve_by_or_tools(logger, inp, is_adj_matrix, distance_matrix, dict_constant
     # cp_model.sat_parameters_pb2
     solver.parameters.num_search_workers = 4
     solver.parameters.log_search_progress = True
+    solver.parameters.max_time_in_seconds = 7200
+
     print(model.ModelStats())
 
     result_status = solver.Solve(model)
-    logger.info('Solve status: %s' % solver.StatusName(result_status))
-    if result_status == cp_model.OPTIMAL:
-        logger.info('optimal value = ', solver.ObjectiveValue())
+    # logger.info('Solve status: %s' % solver.StatusName(result_status))
+    # if result_status == cp_model.OPTIMAL:
+    #     logger.info('optimal value = ', solver.ObjectiveValue())
 
-    logger.info('Statistics')
-    logger.info('  - conflicts : %i' % solver.NumConflicts())
-    logger.info('  - branches  : %i' % solver.NumBranches())
-    logger.info('  - wall time : %f s' % solver.WallTime())
+    # logger.info('Statistics')
+    # logger.info('  - conflicts : %i' % solver.NumConflicts())
+    # logger.info('  - branches  : %i' % solver.NumBranches())
+    # logger.info('  - wall time : %f s' % solver.WallTime())
     print()
     return dict_constant["l"] * solver.ObjectiveValue()
 
@@ -192,6 +194,7 @@ if __name__ == '__main__':
     for path in paths:
         logger.info("input path %s: ", path)
         _inp, _is_adj_matrix, _distance_matrix = prepare(path)
-
-        result = solve_by_or_tools(logger, _inp, _is_adj_matrix, _distance_matrix, _dict_constant)
-        logger.info("Result: %s", result)
+        for i in range(1,21):
+            _inp.max_hop = i
+            result = solve_by_or_tools(logger, _inp, _is_adj_matrix, _distance_matrix, _dict_constant)
+            logger.info("%s %s",i,result)
