@@ -69,7 +69,7 @@ def solve_by_or_tools(inp, is_adj_matrix, distance_matrix, dict_constant):
     # r16
     solver.Add(solver.Sum(
         connect_matrix[0, j] for j in range(inp.num_of_relay_positions + 1))
-               <= inp.num_of_relays)
+               == inp.num_of_relays)
 
     # rang buoc tinh lien thong va chu trinh cua cay
 
