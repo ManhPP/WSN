@@ -176,18 +176,14 @@ def crossover_one_point(ind1, ind2, num_positions, rate_threshold, indpb):
 if __name__ == '__main__':
     params, _data_path = parse_config()
     logger = init_log()
-    logger.info("info param: %s" % params)
-
-    for path in glob.glob(_data_path):
-        t = time.time()
-
-        logger.info("input path: %s" % path)
-        inp = WsnInput.from_file(path)
-        inp.radius = 50
-        # logger.info("num generation: %s" % N_GENS)
-        # logger.info("population size: %s" % POP_SIZE)
-        # logger.info("crossover probability: %s" % CXPB)
-        # logger.info("mutation probability: %s" % MUTPB)
-        # logger.info("info input: %s" % inp.to_dict())
-        run_ga(inp, params, logger)
-        logger.info("Total time: %f" % (time.time() - t))
+    init_rate = [(1,0),(0,1), (0,0)]
+    for rate_mst, rate_spt in init_rate:
+        params["rate_mst"] = rate_mst
+        params["rate_spt"] = rate_spt
+        logger.info("info param: %s" % params)
+        for path in glob.glob(_data_path):
+            t = time.time()
+            logger.info("input path: %s" % path)
+            inp = WsnInput.from_file(path)
+            run_ga(inp, params, logger)
+            logger.info("Total time: %f" % (time.time() - t))
