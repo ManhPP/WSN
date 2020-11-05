@@ -181,9 +181,13 @@ if __name__ == '__main__':
         params["rate_mst"] = rate_mst
         params["rate_spt"] = rate_spt
         logger.info("info param: %s" % params)
+        
         for path in glob.glob(_data_path):
             t = time.time()
             logger.info("input path: %s" % path)
             inp = WsnInput.from_file(path)
-            run_ga(inp, params, logger)
+            try:
+                run_ga(inp, params, logger)
+            except Exception as e:
+                logger.info("Error: %s" % e)
             logger.info("Total time: %f" % (time.time() - t))
