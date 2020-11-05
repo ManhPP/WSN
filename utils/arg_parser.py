@@ -18,7 +18,7 @@ def parse_argument():
 def parse_config():
     parser = configparser.ConfigParser()
     config_file_path = Path(__file__).parent
-    parser.read(f"{config_file_path}/config.ini")
+    parser.read("%s/config.ini"%config_file_path)
     dict_constant = dict()
     dict_constant["epsilon_fs"] = parser.getfloat("CONSTANT", "epsilon_fs")
     dict_constant["epsilon_mp"] = parser.getfloat("CONSTANT", "epsilon_mp")
@@ -28,7 +28,7 @@ def parse_config():
     dict_constant["l"] = parser.getfloat("CONSTANT", "l")
     dict_constant["rate_mst"] = parser.getfloat("INIT", "rate_mst")
     dict_constant["rate_spt"] = parser.getfloat("INIT", "rate_spt")
-    data_path = f"{config_file_path.parent}/{parser.get('PATH', 'data_path')}"
+    data_path = "%s/%s"%(config_file_path.parent, parser.get('PATH', 'data_path'))
     return dict_constant, data_path
 
 
