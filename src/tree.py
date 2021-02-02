@@ -13,7 +13,6 @@ from utils.load_input import WsnInput
 
 inf = float('inf')
 
-
 def random_choices(seq, num):
     result = []
     while len(result) != num:

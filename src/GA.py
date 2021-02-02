@@ -48,16 +48,28 @@ def random_init_individual(constructor, num_edges, num_pos):
 
 def heuristic_init_individual(inp: WsnInput, constructor, rate_mst, rate_spt):
     method = random.choices(["rnd", "spt", "mst"], [1 - (rate_mst + rate_spt), rate_spt, rate_mst])[0]
-    if method == "rnd":
-        individual = random_init_individual(constructor, len(inp.dict_ind2edge.keys()), inp.num_of_relay_positions)
-    elif method == 'spt':
-        g = spt(inp)
-        individual = encode(g[1], g[2], inp.num_of_relay_positions, inp.num_of_relays, inp.num_of_sensors,
-                            len(inp.dict_ind2edge))
-    elif method == 'mst':
-        g = mst(inp)
-        individual = encode(g[1], g[2], inp.num_of_relay_positions, inp.num_of_relays, inp.num_of_sensors,
-                            len(inp.dict_ind2edge))
+    re_run = True
+    num_re_run = 0
+    while re_run:
+        try:
+            if method == "rnd":
+                individual = random_init_individual(constructor, len(inp.dict_ind2edge.keys()), inp.num_of_relay_positions)
+            elif method == 'spt':
+                g = spt(inp)
+                individual = encode(g[1], g[2], inp.num_of_relay_positions, inp.num_of_relays, inp.num_of_sensors,
+                                    len(inp.dict_ind2edge))
+            elif method == 'mst':
+                g = mst(inp)
+                individual = encode(g[1], g[2], inp.num_of_relay_positions, inp.num_of_relays, inp.num_of_sensors,
+                                    len(inp.dict_ind2edge))
+            re_run = False
+        except:
+            num_re_run += 1
+            print("Rerun@!!: ", num_re_run)
+            re_run = True
+            if (num_re_run > 10):
+                break
+
 
     return creator.Individual(individual)
 
