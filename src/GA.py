@@ -18,7 +18,6 @@ from utils.arg_parser import parse_config
 from utils.init_log import init_log
 from utils.load_input import WsnInput
 
-
 creator.create("FitnessMin", base.Fitness, weights=(-1.,))
 FitnessMin = creator.FitnessMin
 creator.create("Individual", list, fitness=FitnessMin)
@@ -52,8 +51,12 @@ def heuristic_init_individual(inp: WsnInput, constructor, rate_mst, rate_spt):
     num_re_run = 0
     while re_run:
         try:
+            if num_re_run > 5:
+                individual = random_init_individual(constructor, len(inp.dict_ind2edge.keys()),
+                                                    inp.num_of_relay_positions)
             if method == "rnd":
-                individual = random_init_individual(constructor, len(inp.dict_ind2edge.keys()), inp.num_of_relay_positions)
+                individual = random_init_individual(constructor, len(inp.dict_ind2edge.keys()),
+                                                    inp.num_of_relay_positions)
             elif method == 'spt':
                 g = spt(inp)
                 individual = encode(g[1], g[2], inp.num_of_relay_positions, inp.num_of_relays, inp.num_of_sensors,
@@ -67,9 +70,9 @@ def heuristic_init_individual(inp: WsnInput, constructor, rate_mst, rate_spt):
             num_re_run += 1
             print("Rerun@!!: ", num_re_run)
             re_run = True
-            if (num_re_run > 10):
+            if num_re_run > 10:
+                print("Break because rerun > 10: ", num_re_run)
                 break
-
 
     return creator.Individual(individual)
 
@@ -188,12 +191,12 @@ def crossover_one_point(ind1, ind2, num_positions, rate_threshold, indpb):
 if __name__ == '__main__':
     params, _data_path = parse_config()
     logger = init_log()
-    init_rate = [(1,0),(0,1), (0,0)]
+    init_rate = [(1, 0), (0, 1), (0, 0)]
     for rate_mst, rate_spt in init_rate:
         params["rate_mst"] = rate_mst
         params["rate_spt"] = rate_spt
         logger.info("info param: %s" % params)
-        
+
         for path in glob.glob(_data_path):
             t = time.time()
             logger.info("input path: %s" % path)
