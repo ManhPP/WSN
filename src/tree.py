@@ -4,7 +4,8 @@ import sys
 import os
 
 from src.constructor import Constructor
-
+import networkx as nx
+import matplotlib.pyplot as plt
 lib_path = os.path.abspath(os.path.join('.'))
 sys.path.append(lib_path)
 
@@ -12,6 +13,7 @@ from DS.graph import Graph
 from utils.load_input import WsnInput
 
 inf = float('inf')
+
 
 def random_choices(seq, num):
     result = []
@@ -81,7 +83,6 @@ def spt(inp):
 
 
 def mst(inp):
-
     graph = Graph()
 
     position_relay_indices = random_choices(range(1, inp.num_of_relay_positions + 1), inp.num_of_relays)
@@ -145,13 +146,21 @@ def encode(position_relay_indices, list_edge_indices, num_position_relays, num_o
 
 
 if __name__ == '__main__':
-    path = "D:\Code\WSN\data\\test.json"
+    path = "/Users/macbookpro/Workspace/WSN/code/WSN/data/new_hop/no-dem1_r50_1_0.json"
     inp = WsnInput.from_file(path)
     constructor = Constructor(None, inp.dict_ind2edge, inp.num_of_sensors, inp.num_of_relays,
                               inp.num_of_relay_positions,
                               inp.all_vertex)
     # g = spt(path=path)
     g = mst(inp)
-    ind = encode(g[1], g[2], inp.num_of_relay_positions, inp.num_of_relays, inp.num_of_sensors, len(inp.dict_ind2edge))
-    gr = constructor.gen_graph(ind)
+    # ind = encode(g[1], g[2], inp.num_of_relay_positions, inp.num_of_relays, inp.num_of_sensors, len(inp.dict_ind2edge))
+    # gr = constructor.gen_graph(ind)
     tmp = deque()
+
+    G = nx.Graph()
+    # G.add_nodes_from(g[0].vertices)
+    G.add_edges_from(g[0].edges_name)
+    pos = nx.spring_layout(G, scale=5)
+    nx.draw_networkx(G, pos)
+    plt.show()
+    name = g[0].edges_name

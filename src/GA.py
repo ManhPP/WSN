@@ -10,6 +10,7 @@ import multiprocessing
 
 lib_path = os.path.abspath(os.path.join('..'))
 sys.path.append(lib_path)
+sys.setrecursionlimit(100000)
 
 from constructor import Constructor
 from fitness import get_fitness
@@ -66,6 +67,7 @@ def heuristic_init_individual(inp: WsnInput, constructor, rate_mst, rate_spt):
                 individual = encode(g[1], g[2], inp.num_of_relay_positions, inp.num_of_relays, inp.num_of_sensors,
                                     len(inp.dict_ind2edge))
             re_run = False
+
         except:
             num_re_run += 1
             print("Rerun@!!: ", num_re_run)

@@ -26,6 +26,17 @@ class Graph:
         return edges
 
     @property
+    def edges_name(self):
+        names = []
+        for v1 in self.graph:
+            for v2 in self.graph[v1]:
+                edge = Edge(v1, v2)
+                name = (edge.vertices[0].name, edge.vertices[1].name)
+                if name not in names:
+                    names.append(name)
+        return names
+
+    @property
     def is_connected(self):
         tmp = self.connected_component()
         if len(tmp) > 1:
