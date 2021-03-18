@@ -6,11 +6,13 @@ import os
 from src.constructor import Constructor
 import networkx as nx
 import matplotlib.pyplot as plt
+
 lib_path = os.path.abspath(os.path.join('.'))
 sys.path.append(lib_path)
 
 from DS.graph import Graph
 from utils.load_input import WsnInput
+from constructor import find, union
 
 inf = float('inf')
 
@@ -85,8 +87,18 @@ def spt(inp):
 def mst(inp):
     graph = Graph()
 
+    parent = {}
+    rank = {}
+
     position_relay_indices = random_choices(range(1, inp.num_of_relay_positions + 1), inp.num_of_relays)
     list_chosen_edge_indices = []
+
+    ignored_position = [i for i in range(1, inp.num_of_relay_positions + 1) if i not in position_relay_indices]
+
+    for i in inp.all_vertex:
+        if i.name not in ignored_position:
+            parent[i] = i
+            rank[i] = 0
 
     v0 = inp.all_vertex[0]
     for i in inp.dict_ind2edge.keys():
@@ -94,8 +106,11 @@ def mst(inp):
         v1, v2 = edge.vertices
         if v1.name == v0.name:
             if v2.name in position_relay_indices:
+                x = find(parent, v1)
+                y = find(parent, v2)
                 graph.add_edge(edge)
                 list_chosen_edge_indices.append(i)
+                union(parent, rank, x, y)
 
     lst_edge_indices = []
     for item in inp.dict_ind2edge.items():
@@ -113,10 +128,15 @@ def mst(inp):
 
     for i in lst_edge_indices:
         edge = inp.dict_ind2edge[i]
-        num_edge_before = len(graph.edges)
-        graph.add_edge(edge)
-        if len(graph.edges) == num_edge_before + 1:
+        ###
+        # union find
+        x = find(parent, edge.vertices[0])
+        y = find(parent, edge.vertices[1])
+        if x != y:
+            graph.add_edge(edge)
+            union(parent, rank, x, y)
             list_chosen_edge_indices.append(i)
+        ###
         if len(graph.edges) == inp.num_of_relays + inp.num_of_sensors:
             break
     return graph, position_relay_indices, list_chosen_edge_indices
