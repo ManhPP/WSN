@@ -166,15 +166,15 @@ def encode(position_relay_indices, list_edge_indices, num_position_relays, num_o
 
 
 if __name__ == '__main__':
-    path = "/Users/macbookpro/Workspace/WSN/code/WSN/data/new_hop/no-dem1_r50_1_0.json"
+    path = "/Users/macbookpro/Workspace/WSN/code/WSN/data/new_hop_large/no-dem4_r50_1_0.json"
     inp = WsnInput.from_file(path)
     constructor = Constructor(None, inp.dict_ind2edge, inp.num_of_sensors, inp.num_of_relays,
                               inp.num_of_relay_positions,
                               inp.all_vertex)
     # g = spt(path=path)
     g = mst(inp)
-    # ind = encode(g[1], g[2], inp.num_of_relay_positions, inp.num_of_relays, inp.num_of_sensors, len(inp.dict_ind2edge))
-    # gr = constructor.gen_graph(ind)
+    # ind = encode(g[1], g[2], inp.num_of_relay_positions, inp.num_of_relays, inp.num_of_sensors,
+    # len(inp.dict_ind2edge)) gr = constructor.gen_graph(ind)
     tmp = deque()
 
     G = nx.Graph()

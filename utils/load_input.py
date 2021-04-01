@@ -67,7 +67,8 @@ class WsnInput:
             for index_j in range(index_i+1, len(all_vertex)):
                 j = all_vertex[index_j]
                 dis = distance(i, j)
-                if dis <= 2 * radius and distance(i, j) != 0:
+                if (dis <= 2 * radius or (i.type_of_vertex == 'bs' and j.type_of_vertex == 'relay')) \
+                        and distance(i, j) != 0:
                     edge = Edge(i, j)
                     if edge not in dict_ind2edge.values():
                         index = len(dict_ind2edge)
