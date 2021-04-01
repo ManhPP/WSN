@@ -159,7 +159,7 @@ def solve_by_or_tools(logger, inp, is_adj_matrix, distance_matrix, dict_constant
 
     # print('Number of constraints =', model.NumConstraints())
     solver = cp_model.CpSolver()
-    solver.parameters.max_time_in_seconds = 30
+    solver.parameters.max_time_in_seconds = 18000
     # cp_model.sat_parameters_pb2
     solver.parameters.num_search_workers = 4
     solver.parameters.log_search_progress = True
