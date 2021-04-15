@@ -167,7 +167,7 @@ def solve_by_or_tools(logger, inp, is_adj_matrix, distance_matrix, dict_constant
 
     result_status = solver.Solve(model)
     logger.info('Solve status: %s' % solver.StatusName(result_status))
-    if result_status == cp_model.OPTIMAL:
+    if result_status != cp_model.INFEASIBLE:
         logger.info('optimal value = ', solver.ObjectiveValue())
 
     logger.info('Statistics')
