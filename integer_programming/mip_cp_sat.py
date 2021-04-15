@@ -159,7 +159,7 @@ def solve_by_or_tools(logger, inp, is_adj_matrix, distance_matrix, dict_constant
 
     # print('Number of constraints =', model.NumConstraints())
     solver = cp_model.CpSolver()
-    solver.parameters.max_time_in_seconds = 18000
+    solver.parameters.max_time_in_seconds = 14400
     # cp_model.sat_parameters_pb2
     solver.parameters.num_search_workers = 4
     solver.parameters.log_search_progress = True
@@ -168,7 +168,7 @@ def solve_by_or_tools(logger, inp, is_adj_matrix, distance_matrix, dict_constant
     result_status = solver.Solve(model)
     logger.info('Solve status: %s' % solver.StatusName(result_status))
     if result_status != cp_model.INFEASIBLE:
-        logger.info('optimal value = ', solver.ObjectiveValue())
+        logger.info('optimal value = %s' % solver.ObjectiveValue())
 
     logger.info('Statistics')
     logger.info('  - conflicts : %i' % solver.NumConflicts())
