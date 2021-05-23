@@ -8,9 +8,7 @@ def process_mip_log():
         log = open(file)
         for line in log.readlines():
             if line[0] == 'i':
-                path = line[len(
-                    "input path /home/tamnt/mpp/WSN/data/new_hop/"):-len(
-                    ": \n")]
+                path = line.split(":")[0].split("/")[-1]
             if line[0] == 'R':
                 opt = line[len("Result: "):-len("\n")]
                 if path not in result.keys():
@@ -29,7 +27,7 @@ def process_ga_log(file_name, out_file_name):
 
     for line in f.readlines():
         if line[0] == 'i':
-            path = line[len("input path: /home/tamnt/mpp/WSN/data/new_hop/"):-len("\n")]
+            path = line.strip().split("/")[-1]
         if line[0] == '[':
             r = line[1:-2].split(",")
             result.append([path] + r)
