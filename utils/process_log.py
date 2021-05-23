@@ -1,4 +1,5 @@
 import pandas as pd
+from pandas import ExcelWriter
 
 
 def process_mip_log():
@@ -15,7 +16,7 @@ def process_mip_log():
                 if path not in result.keys():
                     result[path] = opt
     df = pd.DataFrame(result.items(), columns=["file", "mip"])
-    df.to_csv("log_mip.csv")
+    df.to_excel("log_mip.xlsx")
     print("Done!")
 
 
@@ -24,6 +25,8 @@ def process_ga_log(file_name, out_file_name):
     result = []
     count = 0
     special_name = ["mst", "spt", "rnd"]
+    writer = pd.ExcelWriter(out_file_name + ".xlsx", engine='xlsxwriter')
+
     for line in f.readlines():
         if line[0] == 'i':
             path = line[len("input path: /home/tamnt/mpp/WSN/data/new_hop/"):-len("\n")]
@@ -33,9 +36,12 @@ def process_ga_log(file_name, out_file_name):
             count += 1
         if count % 60 == 0 and count//60 > 0:
             df = pd.DataFrame(result, columns=["file", "min", "max", "avg", "std"])
-            df.to_csv(out_file_name + "_" + special_name.pop(0) + ".csv")
+            df.to_excel(writer, sheet_name=special_name.pop(0))
+            # df.to_csv(out_file_name + "_" + special_name.pop(0) + ".xlsx")
             result = []
             count = 0
+
+    writer.save()
 
 
 if __name__ == '__main__':
