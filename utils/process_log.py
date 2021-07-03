@@ -38,10 +38,11 @@ def process_ga_log(file_name, out_file_name):
             # df.to_csv(out_file_name + "_" + special_name.pop(0) + ".xlsx")
             result = []
             count = 0
-
+    # df = pd.DataFrame(result, columns=["file", "min", "max", "avg", "std"])
+    # df.to_excel(writer, sheet_name=special_name.pop(0))
     writer.save()
 
 
 if __name__ == '__main__':
     # process_mip_log()
-    process_ga_log("logs/wsnlog-20210426220003.log", "ga_small")
+    process_ga_log("logs/wsnlog-20210429131946.log", "ga_large")
